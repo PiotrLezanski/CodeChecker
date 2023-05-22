@@ -1,7 +1,7 @@
 # CodeChecker
 
 ## Idea
-App to compare, analyze and test C++ programms (int the future also Java). Mostly for people that does not feel cofident int Bash.
+App to compare, analyze and test C++ programms (in the future also Java). Mostly for people that does not feel cofident in Bash.
   
 ## Applications
 #### 1. Get output
