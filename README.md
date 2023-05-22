@@ -9,5 +9,3 @@ After importing C++ file and .in file, CodeChecker returns preview of .out file 
 
 #### 2. Compare two programs (in progress)
 After importing two C++ files and .py file that will generate test cases, CodeChecker test both programms and give feedback about differences.
-
-## Design
