@@ -5,34 +5,17 @@ import customtkinter as ctk
 import subprocess
 import os
 
+class MainWindow(ctk.CTkFrame):
+    def __init__(self, parent, controller):
+        ctk.CTkFrame.__init__(self, parent)
 
-ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
-ctk.set_default_color_theme("green")
-
-class MainWindow(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.title("C++ Code Checker")    
-        self.geometry("810x500")
 
     # configure grid layout
-        self.grid_columnconfigure(1, weight=1)
+        # self.grid_columnconfigure(1, weight=1)
         # self.grid_columnconfigure(2, weight=1)
-        self.grid_rowconfigure(0, weight=0);
-        self.grid_rowconfigure(1, weight=0);
-        self.grid_rowconfigure(3, weight=1)
-
-    # sidebar
-        self.sidebar_frame = ctk.CTkFrame(self, width=140, corner_radius=0)
-        self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
-        self.sidebar_frame.grid_rowconfigure(4, weight=1)
-        self.logo_label = ctk.CTkLabel(self.sidebar_frame, text="CodeChecker", font=ctk.CTkFont(size=20, weight="bold"))
-        self.logo_label.grid(row=0, column=0, padx=20, pady=20)
-
-        self.scale_label = ctk.CTkLabel(self.sidebar_frame, text="zoom")
-        self.scale_label.grid(row=7, column=0, padx=10)
-        self.scale_menu = ctk.CTkOptionMenu(self.sidebar_frame, values=["80%", "90%", "100%", "110%", "120%"], command=self.change_window_scale)
-        self.scale_menu.grid(row=8, column=0, padx=10, pady=(5,10))
+        # self.grid_rowconfigure(0, weight=0)
+        # self.grid_rowconfigure(1, weight=0)
+        # self.grid_rowconfigure(3, weight=1)
 
     # main
         # language picker
@@ -60,34 +43,32 @@ class MainWindow(ctk.CTk):
         self.infile_preview = ctk.CTkTextbox(self, height=200)
         self.infile_preview.grid(row=2, column=1, padx=20, pady=10, sticky="new")
 
-    def change_window_scale(self):
-        True
-
     def open_source_file(self):
-        self.import_source_button._bg_color = "green" # change color when imported
         source_code = filedialog.askopenfilename(title="Choose a source file", initialdir="/", filetypes=[("Cpp files", "*.cpp")])
         # get working path
-        components = source_code.split("/")
-        self.source_code_file_name = components[len(components)-1]
-        self.imported_file_name = ctk.CTkLabel(self.code_frame, text=self.source_code_file_name)
-        self.imported_file_name.grid(row=1, column=3)
-        self.path = ""
-        for i in range(0, len(components)-1):
-            self.path += components[i] + "/"
-        # end
-        source_code = open(source_code, 'r')
-        self.code = source_code.read()
+        if source_code != "":
+            self.import_source_button._bg_color = "green" # change color when imported
+            components = source_code.split("/")
+            self.source_code_file_name = components[len(components)-1]
+            self.imported_file_name = ctk.CTkLabel(self.code_frame, text=self.source_code_file_name)
+            self.imported_file_name.grid(row=1, column=3)
+            self.path = ""
+            for i in range(0, len(components)-1):
+                self.path += components[i] + "/"
+            source_code = open(source_code, 'r')
+            self.code = source_code.read()
         source_code.close()
 
     def open_input_file(self):
-        self.infile_button._bg_color = "green" # change color when imported
         input_file = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", ".in")])
-        components = input_file.split("/")
-        self.input_file_name = components[len(components)-1]
-        self.input_file = open(input_file, 'r')
-        self.input_text = self.input_file.read()
-        self.infile_preview.delete("0.0", tkinter.END) # clear textbox
-        self.infile_preview.insert(tkinter.END, self.input_text)
+        if input_file != "":
+            self.infile_button._bg_color = "green" # change color when imported
+            components = input_file.split("/")
+            self.input_file_name = components[len(components)-1]
+            self.input_file = open(input_file, 'r')
+            self.input_text = self.input_file.read()
+            self.infile_preview.delete("0.0", tkinter.END) # clear textbox
+            self.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 
     def run_code(self):
         try:
@@ -115,7 +96,7 @@ class MainWindow(ctk.CTk):
             self.save_output_button.grid(row=3, column=3, padx=10)
         except: 
             # error
-            messagebox.showerror("showerror", "You need to add source file or provide input")
+            messagebox.showerror("showerror", "You need to add source file and provide input")
 
     def open_preview_window(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
@@ -141,5 +122,3 @@ class MainWindow(ctk.CTk):
         out_file.close()
         self.save_output_button.configure(text="saved", fg_color="transparent")
 
-
-# TODO: if file not picked, but clicked, changed to green color -> should stay transparent
