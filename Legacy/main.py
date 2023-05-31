@@ -5,15 +5,16 @@ from MainWindow import *
 #TODO: import other files
 from page1 import *
 
+
 class CodeCheckerApp(ctk.CTk):
     def __init__(self):
         ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
         ctk.set_default_color_theme("green")
 
         super().__init__()
-        self.title("C++ Code Checker")    
+        self.title("C++ Code Checker")
         self.geometry("810x500")
-        
+
     # configure grid layout
         self.grid_columnconfigure(1, weight=1)
         self.grid_rowconfigure(0, weight=0)
@@ -64,12 +65,13 @@ class CodeCheckerApp(ctk.CTk):
     def change_window_scale(self, new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         ctk.set_widget_scaling(new_scaling_float)
-        new_geom = str(int(new_scaling_float*810)) +'x'+  str(int(new_scaling_float*500))
+        new_geom = str(int(new_scaling_float*810)) + 'x' + str(int(new_scaling_float*500))
         self.geometry(new_geom)
 
     def set_active(self, page):
         # TODO: dont forget do add new buttons
         self.get_output_button._bg_color = ""
+
 
 if __name__ == "__main__":
     app = CodeCheckerApp()

@@ -5,10 +5,10 @@ import customtkinter as ctk
 import subprocess
 import os
 
+
 class MainWindow(ctk.CTkFrame):
     def __init__(self, parent, controller):
         ctk.CTkFrame.__init__(self, parent)
-
 
     # configure grid layout
         # self.grid_columnconfigure(1, weight=1)
