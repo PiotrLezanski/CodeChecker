@@ -20,4 +20,4 @@ TestPass – the user passes testcases as an input. The application executes the
 
 CodeDifference – given two codes from the user, the program will check for semantic differences and will return every place, where the codes are different.
 
-CodeChecker provides user-friendly interface, allowing developer to easily configure the analysis parameters and customize the rule sets according to their project requirements.
+CodeChecker provides user-friendly interface, allowing developer to easily configure the analysis parameters and customize the rule sets according to their project requirements.  
