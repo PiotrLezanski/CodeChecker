@@ -2,8 +2,8 @@ from Tools.Exceptions import WrongExtensionError
 from typing import Optional, IO
 class FileSingleton(object):
     __instance = None
-    __file1: Optional[IO] = None
-    __file2: Optional[IO] = None
+    __file1: Optional[IO] = None #file1 is the left file
+    __file2: Optional[IO] = None #file2 is the right file
     __filepath1: Optional[str] = None
     __filepath2: Optional[str] = None
 
@@ -35,6 +35,11 @@ class FileSingleton(object):
     def get_filepath2():
         return FileSingleton.__filepath2
 
+
+    #before reading new file close old file
+    #if wrong extension, raise exception WrongExtensionError
+    #if you cant use WrongExtensionError, type from Tools.Exceptions import WrongExtensionError
+    #if wrong path, raise exception FileNotFoundError
     @staticmethod
     def set_file1(file_path):
         FileSingleton.__close_file1()
@@ -44,6 +49,10 @@ class FileSingleton(object):
         else:
             raise WrongExtensionError("File must be a .cpp or .h file")
 
+    # before reading new file close old file
+    # if wrong extension, raise exception WrongExtensionError
+    # if you cant use WrongExtensionError, type from Tools.Exceptions import WrongExtensionError
+    # if wrong path, raise exception FileNotFoundError
     @staticmethod
     def set_file2(file_path):
         FileSingleton.__close_file2()
