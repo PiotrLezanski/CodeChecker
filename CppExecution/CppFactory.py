@@ -1,5 +1,5 @@
 import os
-import CppObject
+from CppExecution.CppObject import *
 
 class CppFactory:
     def __init__(self, max_exec_time : int):
@@ -16,11 +16,3 @@ class CppFactory:
             return True
         else:
             return False
-
-    # method receives C++ code as string and input as string
-    # def CppObjectFromString(self, code : str, input : str):
-    #     temp_file = open('tempCodeChecker.in', 'w+')
-    #     temp_file.write(code)
-    #     current_directory = os.path.abspath(os.getcwd())
-    #     self.object = CppObject(current_directory + "/tempCodeChecker.in", input)
-    #     return object
