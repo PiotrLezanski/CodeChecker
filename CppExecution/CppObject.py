@@ -15,7 +15,7 @@ class CppObject:
     
     def compile_and_run(self):
         # compile
-        self.compilation_logs = self.getCompilationLogs()
+        self.compilation_logs = self.compile()
 
         # execute programm only, if compilation was succesful
         if self.compilation_logs == "":
@@ -44,7 +44,7 @@ class CppObject:
         except:
             print("Programm needs to be successfuly compiled before saving output.")
 
-    def getCompilationLogs(self):
+    def compile(self):
         res = subprocess.run(['g++', self.file_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return res.stdout.decode('utf-8')
     
@@ -56,7 +56,7 @@ class CppObject:
 
     def check_leaks(self):
         # compile
-        self.compilation_logs = self.getCompilationLogs()
+        self.compilation_logs = self.compile()
 
         # print("COMP LOGS:\n" + self.compilation_logs)
 
@@ -78,3 +78,6 @@ class CppObject:
     
     def get_leaks_logs(self):
         return self.leaks_logs
+    
+    def get_output_file_name(self):
+        return self.output_file_name
