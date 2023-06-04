@@ -5,15 +5,14 @@ import customtkinter as ctk
 
 import subprocess
 
-# from CppExecution import CppFactory
-# from CppExecution import CppObject
 
-# from CppExecution.CppFactory import CppFactory
-# from CppExecution.CppObject import CppObject
+from CppExecution.CppFactory import CppFactory
+from CppExecution.CppObject import CppObject
 
-from Tools import FileSingleton
+# from Tools import FileSingleton
+from Tools.FileSingleton import *
 
-class Controller():
+class Controller:
     def __init__(self, view):
         self.view = view
 
