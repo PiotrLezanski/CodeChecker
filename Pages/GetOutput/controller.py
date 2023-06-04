@@ -5,12 +5,7 @@ import customtkinter as ctk
 
 import subprocess
 
-
 from CppExecution.CppFactory import CppFactory
-from CppExecution.CppObject import CppObject
-
-# from Tools import FileSingleton
-from Tools.FileSingleton import *
 
 class Controller:
     def __init__(self, view):
@@ -55,41 +50,38 @@ class Controller:
 
         # create CppFactory and CppObject
         factory = CppFactory(10000)
-        try:
-            cppobject = CppFactory.CppObjectFromFilepath(self.code_filepath, self.input_filepath)
-        except:
-            messagebox.showerror("showerror", "You need to add source file and provide input")
 
+        self.cppobject = factory.CppObjectFromFilepath(self.code_filepath, self.input_filepath)
         # if compilation was successful
-        if cppobject.get_compilation_logs() == "":
+        if self.cppobject.get_compilation_logs() == "":
             # if run button pushed, generate .out file and its preview
-            self.view.output_frame = ctk.CTkFrame(self)
+            self.view.output_frame = ctk.CTkFrame(self.view)
             self.view.output_frame.grid(row=3, column=1, columnspan=3, padx=20, pady=10, sticky="nesw")
             try:
-                self.view.output_label = ctk.CTkLabel(self.output_frame, text="Output: " + cppobject.output_file_name())
+                self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: " + cppobject.output_file_name())
             except:
-                self.view.output_label = ctk.CTkLabel(self.output_frame, text="Output: test.out")
+                self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: test.out")
             self.view.output_label.grid(row=3, column=1, padx=10, pady=20)
             self.view.output_frame.rowconfigure(3,weight=1)
 
-            self.toplevel_window = None 
-            self.view.preview_button = ctk.CTkButton(self.output_frame, text="Preview", fg_color="transparent", border_width=2, command=self.open_preview_window)
+            self.view.toplevel_window = None
+            self.view.preview_button = ctk.CTkButton(self.view.output_frame, text="Preview", fg_color="transparent", border_width=2, command=self.open_preview_window)
             self.view.preview_button.grid(row=3, column=2, padx=10)
 
-            self.view.save_output_button = ctk.CTkButton(self.output_frame, text="Save .out file", command=self.save_output_file)
+            self.view.save_output_button = ctk.CTkButton(self.view.output_frame, text="Save .out file", command=self.cppobject.save_output_to_file())
             self.view.save_output_button.grid(row=3, column=3, padx=10)
-            
+
     def open_preview_window(self):
-        if self.view.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.view.toplevel_window = ctk.CTkToplevel(self)  # create window if its None or destroyed
+        if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():
+            self.view.toplevel_window = ctk.CTkToplevel(self.view)  # create window if its None or destroyed
             self.view.toplevel_window.rowconfigure(0, weight=1)
             self.view.toplevel_window.columnconfigure(0, weight=1)
             self.view.toplevel_window.title("output file preview")
             self.view.toplevel_window.geometry("310x370")
-            self.view.output_preview = ctk.CTkTextbox(self.toplevel_window)
+            self.view.output_preview = ctk.CTkTextbox(self.view.toplevel_window)
             self.view.output_preview.grid(row=0, column=0, sticky="nesw")
 
             self.view.output_preview.delete("0.0", tkinter.END)
-            self.view.output_preview.insert("0.0", self.result.stdout)
+            self.view.output_preview.insert("0.0", self.cppobject.get_output())
         else:
             self.view.toplevel_window.focus()  # if window exists focus it

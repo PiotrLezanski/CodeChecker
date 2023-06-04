@@ -32,15 +32,13 @@ class CppObject:
         # e.g. output for file test1.in will be saved as test1.out file
         try:
             # get input file name
-            self.output_file_name = self.filepath[self.file_path.rfind('/')+1:self.file_path.rfind('.')]+".out"
+            self.output_file_name = self.file_path[self.file_path.rfind('/')+1:self.file_path.rfind('.')]+".out"
 
             #create .out file
             output_file = open(self.output_file_name, 'w+')
             output_file.write(self.output_text)
 
             print("Output file name: " + self.output_file_name) # test
-
-            return self.output_file_name
         except:
             print("Programm needs to be successfuly compiled before saving output.")
 
