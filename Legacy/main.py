@@ -33,7 +33,6 @@ class CodeCheckerApp(ctk.CTk):
         self.scale_menu.grid(row=8, column=0, padx=10, pady=(5,10))
 
     # menu
-        # TODO: add another applications/frames to menu
         self.menu_buttons = []
         self.get_output_button = ctk.CTkButton(self.sidebar_frame, text="Get Output", command=lambda: self.show_frame(MainWindow))
         self.get_output_button.grid(row=1, column=0, pady=10)
