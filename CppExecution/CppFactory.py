@@ -1,5 +1,5 @@
 import os
-from CppObject import *
+import CppObject
 
 class CppFactory:
     def __init__(self, max_exec_time : int):
