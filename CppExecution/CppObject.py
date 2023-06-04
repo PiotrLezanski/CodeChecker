@@ -3,7 +3,7 @@ import datetime
 import os
 
 class CppObject:
-    def __init__(self, source_code_filepath : str, input_filepath : str):
+    def __init__(self, source_code_filepath, input_filepath):
         self.file_path = source_code_filepath
         with open(input_filepath, 'w+') as file:
             self.input_text = file.read()
@@ -12,12 +12,12 @@ class CppObject:
         # changing working directory to directory from which came file with source code
         working_directory = self.file_path[0:self.file_path.rfind('/')] + '/'
         os.chdir(working_directory)
-    
+
     def compile_and_run(self):
         # compile
         self.compilation_logs = self.compile()
 
-        # execute program only, if compilation was successful
+        # execute programm only, if compilation was succesful
         if self.compilation_logs == "":
             # run with given input and test execution time
             start = datetime.datetime.now() # start timer
@@ -45,7 +45,7 @@ class CppObject:
     def compile(self):
         res = subprocess.run(['g++', self.file_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return res.stdout.decode('utf-8')
-    
+
     def getLeaksLogs(self):
         # programm needs to be compiled
        command = 'leaks -atExit -- ./a.out <' + str(self.input_filepath) + '| grep LEAK'
@@ -56,7 +56,9 @@ class CppObject:
         # compile
         self.compilation_logs = self.compile()
 
-        # check for leaks only, if compilation was successful
+        # print("COMP LOGS:\n" + self.compilation_logs)
+
+        # check for leaks only, if compilation was succesful
         if self.compilation_logs == "":
             self.leaks_logs = self.getLeaksLogs()
             # print("LEAKS LOGS:\n" + self.leaks_logs)
@@ -71,9 +73,9 @@ class CppObject:
     # if function return nothing, compilation was successful
     def get_compilation_logs(self) -> str:
         return self.compilation_logs
-    
+
     def get_leaks_logs(self):
         return self.leaks_logs
-    
+
     def get_output_file_name(self):
         return self.output_file_name
