@@ -1,11 +1,14 @@
+from Pages.CheckEfficiency.controller import Controller
 from Tools import FileSingleton
 import customtkinter as ctk
 import tkinter
 
 
-class view(ctk.CTkFrame):
+class View(ctk.CTkFrame):
     def __init__(self, parent, controller, singleton=FileSingleton.FileSingleton.get_instance()):
         ctk.CTkFrame.__init__(self, parent)
+
+        self.controller = Controller(self)
 
         # input file container
         self.generate_file_container()
@@ -16,7 +19,7 @@ class view(ctk.CTkFrame):
         # testcase container
         self.generate_testcase_container()
 
-    def generate_file_container(self, singleton=FileSingleton.FileSingleton.get_instance()):
+    def generate_file_container(self):
         self.import_file_frame = ctk.CTkFrame(self)
         self.import_file_frame.columnconfigure(0, weight=1)
         self.import_file_frame.columnconfigure(1, weight=1)
@@ -26,7 +29,7 @@ class view(ctk.CTkFrame):
         self.import_source_label = ctk.CTkLabel(self.import_file_frame, text="Import source code")
         self.import_source_label.grid(row=0, column=0, padx=10, pady=10)
         self.import_source_button = ctk.CTkButton(self.import_file_frame, text="Choose file", fg_color="transparent",
-                                                  border_width=2)  # metoda controllera))
+                                                  border_width=2, command=self.controller.load_source_file)
         self.import_source_button.grid(row=0, column=1, padx=10, pady=10)
 
         self.generate_file_name()
