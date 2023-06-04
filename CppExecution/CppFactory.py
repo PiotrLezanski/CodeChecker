@@ -6,9 +6,8 @@ class CppFactory:
         self.max_exec_time = max_exec_time
     
     # method receives C++ code as filepath and input as string
-    def CppObjectFromFilepath(self, file_path : str, input_text : str):
-        self.object = CppObject(file_path, input_text)
-        self.object.compile_and_run()
+    def CppObjectFromFilepath(self, filepath : str, input_filepath : str):
+        self.object = CppObject(filepath, input_filepath)
         return self.object
 
     def exceededTime(self):
@@ -16,3 +15,10 @@ class CppFactory:
             return True
         else:
             return False
+
+    def CppObjectFromString(self, filepath : str, input_text : str):
+        tmp_file = open("CCfile.in", 'w')
+        tmp_file.write(input_text)
+        input_filepath = str(os.getcwd()) + "/CCfile.in"
+        self.object = CppObject(filepath, input_filepath)
+        return self.object

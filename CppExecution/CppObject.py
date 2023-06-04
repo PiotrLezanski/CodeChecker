@@ -3,7 +3,7 @@ import datetime
 import os
 
 class CppObject:
-    def __init__(self, source_code_filepath, input_filepath):
+    def __init__(self, source_code_filepath : str, input_filepath : str):
         self.file_path = source_code_filepath
         with open(input_filepath, 'w+') as file:
             self.input_text = file.read()
@@ -17,7 +17,7 @@ class CppObject:
         # compile
         self.compilation_logs = self.compile()
 
-        # execute programm only, if compilation was succesful
+        # execute program only, if compilation was successful
         if self.compilation_logs == "":
             # run with given input and test execution time
             start = datetime.datetime.now() # start timer
@@ -56,9 +56,7 @@ class CppObject:
         # compile
         self.compilation_logs = self.compile()
 
-        # print("COMP LOGS:\n" + self.compilation_logs)
-
-        # check for leaks only, if compilation was succesful
+        # check for leaks only, if compilation was successful
         if self.compilation_logs == "":
             self.leaks_logs = self.getLeaksLogs()
             # print("LEAKS LOGS:\n" + self.leaks_logs)
