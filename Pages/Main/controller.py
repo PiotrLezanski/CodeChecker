@@ -17,11 +17,22 @@ class Controller:
             container.grid_columnconfigure(0, weight=1)
             self.frames[page] = frame
 
+    @staticmethod
+    def generate_button(frame, position, name, expression):
+        button = ctk.CTkButton(frame, text=name, command=expression)
+        button.grid(row=position, column=0, pady=10)
+        return button
+
+    def button_on_click(self, button_id, page):
+        self.disable_button(button_id)
+        self.show_frame(page)
+
+    def disable_button(self, button_id):
+        clicked = self.view.buttons[button_id - 1]
+        for button in self.view.buttons:
+            button.configure(state="normal")
+        clicked.configure(state="disabled")
+
     def show_frame(self, page):
         frame = self.frames[page]
         frame.tkraise()
-
-    @staticmethod
-    def generate_button(frame, position, name, expression):
-        get_output_button = ctk.CTkButton(frame, text=name, command=expression)
-        get_output_button.grid(row=position, column=0, pady=10)

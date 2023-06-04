@@ -1,4 +1,3 @@
-import tkinter
 import customtkinter as ctk
 
 from Pages.Main.view import View

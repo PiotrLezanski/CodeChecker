@@ -17,5 +17,3 @@ class Controller:
     def change_window_scale(new_scaling: str):
         new_scaling_float = int(new_scaling.replace("%", "")) / 100
         ctk.set_widget_scaling(new_scaling_float)
-        # new_geom = str(int(new_scaling_float * 810)) + 'x' + str(int(new_scaling_float * 500))
-        # self.view.geometry(new_geom)
