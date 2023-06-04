@@ -78,5 +78,3 @@ class CppObject:
     
     def get_leaks_logs(self):
         return self.leaks_logs
-
-# clang++ test.cpp && leaks -atExit -- ./a.out < test.in | grep LEAK
