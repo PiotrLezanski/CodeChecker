@@ -2,10 +2,9 @@ import tkinter
 import customtkinter as ctk
 from controller import Controller
 
-class View(ctk.CTk):
-    def __init__(self):
-        # ctk.CTkFrame.__init__(self, parent)
-        super().__init__()
+class View(ctk.CTkFrame):
+    def __init__(self, parent):
+        ctk.CTkFrame.__init__(self, parent)
 
         # create controller
         controller = Controller(self)
