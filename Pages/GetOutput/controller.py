@@ -2,37 +2,33 @@ import tkinter
 from tkinter import messagebox
 from tkinter import filedialog
 import customtkinter as ctk
-
 import subprocess
-
 from CppExecution.CppFactory import CppFactory
+from Tools.FileSingleton import FileSingleton
 
 class Controller:
     def __init__(self, view):
-        self.cppobject = None
         self.input_file_name = None
         self.input_text = None
         self.input_file = None
         self.input_filepath = None
         self.code_filepath = None
         self.code_text = None
-        self.source_code_file_name = None
+        self.cppobject = None
         self.view = view
 
     def open_source_file(self):
         self.code_filepath = filedialog.askopenfilename(title="Choose a source file", initialdir="/", filetypes=[("Cpp files", "*.cpp")])
         # get working path
         if self.code_filepath != "":
+            # change singleton path
+            FileSingleton.set_file1(self.code_filepath)
+
             # get code to variable
             source_file = open(self.code_filepath, 'r')
             self.code_text = source_file.read()
 
             self.view.import_source_button._bg_color = "green" # change color when imported
-            components = self.code_filepath.split("/")
-            self.source_code_file_name = components[len(components)-1]
-
-            self.view.imported_file_name = ctk.CTkLabel(self.view.code_frame, text=self.source_code_file_name)
-            self.view.imported_file_name.grid(row=1, column=3)
             source_file.close()
 
     def open_input_file(self):
@@ -45,7 +41,6 @@ class Controller:
             self.view.infile_button._bg_color = "green" # change color when imported
             components = self.input_filepath.split("/")
             self.input_file_name = components[len(components)-1]
-
             self.view.infile_preview.delete("0.0", tkinter.END) # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 

@@ -1,7 +1,7 @@
 import tkinter
 import customtkinter as ctk
-from Pages.GetOutput.controller import Controller
-
+from controller import Controller
+from Tools.FileSingleton import FileSingleton
 class View(ctk.CTkFrame):
     def __init__(self, parent):
         ctk.CTkFrame.__init__(self, parent)
@@ -19,8 +19,19 @@ class View(ctk.CTkFrame):
         # source file
         self.import_source_label = ctk.CTkLabel(self.code_frame, text="Import source code")
         self.import_source_label.grid(row=1, column=1, padx=10, pady=10, sticky="nw")
+
         self.import_source_button = ctk.CTkButton(self.code_frame, text="Choose file", fg_color="transparent", border_width=2, command=controller.open_source_file)
         self.import_source_button.grid(row=1, column=2, padx=10, pady=10, sticky="nw")
+
+        # get imported file name
+        if FileSingleton.get_filepath1() is None:
+            text = "No file uploaded"
+        else:
+            self.import_source_button._bg_color = "green"
+            text = FileSingleton.get_filepath1()[FileSingleton.get_filepath1().rfind('/'):]
+        self.imported_file_name = ctk.CTkLabel(self.code_frame, text=text)
+        self.imported_file_name.grid(row=1, column=3)
+
         # .in file and run button
         self.infile_frame  = ctk.CTkFrame(self)
         self.infile_frame.grid(row=1, column=1, padx=20, pady=10, sticky="ew")
