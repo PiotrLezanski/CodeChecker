@@ -103,7 +103,7 @@ class TestFileSingleton(unittest.TestCase):
 
         self.instance.set_file(valid_file_path, 0)
         first_file = self.instance.get_file(0)
-        mock_open.side_effect = FileNotFoundError
+        mock_open.side_effect = [FileNotFoundError, mock_open.return_value]
 
         with self.assertRaises(FileNotFoundError):
             self.instance.set_file(unexisting_file_path, 0)
