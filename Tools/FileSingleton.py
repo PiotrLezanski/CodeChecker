@@ -30,6 +30,14 @@ class FileSingleton(object):
         return FileSingleton.__file2
 
     @staticmethod
+    def get_file1_text():
+        return FileSingleton.__file1.read()
+
+    @staticmethod
+    def get_file2_text():
+        return FileSingleton.__file2.read()
+
+    @staticmethod
     def get_filepath1():
         return FileSingleton.__filepath1
 

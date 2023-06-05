@@ -22,17 +22,17 @@ class View(ctk.CTkFrame):
 
     def generate_codes(self):
         grid = ctk.CTkFrame(self.content)
-        self.generate_single_code(grid, 0)
-        self.generate_single_code(grid, 2)
+        self.generate_single_code(grid, 0, 1)
+        self.generate_single_code(grid, 2, 2)
         grid.grid_columnconfigure(0, weight=1)
         grid.grid_columnconfigure(2, weight=1)
         grid.pack(fill="x", expand=1, padx=20, pady=20)
 
-    def generate_single_code(self, grid, column_number):
+    def generate_single_code(self, grid, column_number, _id):
         label = ctk.CTkLabel(grid, text="Code preview")
         label.grid(row=0, column=column_number, sticky="nsew", padx=10, pady=10)
         text_box = ctk.CTkTextbox(grid, wrap="word")
         text_box.grid(row=1, column=column_number, columnspan=2, sticky="nsew", padx=10, pady=10)
         file_button = ctk.CTkButton(grid, text="Choose file", fg_color="transparent", border_width=2,
-                                    command=lambda: self.controller.load_file(text_box))
+                                    command=lambda: self.controller.load_file(text_box, _id))
         file_button.grid(row=0, column=column_number + 1)
