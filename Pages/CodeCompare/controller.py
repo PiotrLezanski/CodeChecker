@@ -26,3 +26,6 @@ class Controller:
             elif file_number == 2:
                 self.view.second_file_name.configure(text=file_name)
                 FileSingleton.set_file(path, 1)
+
+    def run(self):
+        pass

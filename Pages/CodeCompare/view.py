@@ -90,7 +90,7 @@ class View(ctk.CTkFrame):
         self.infile_button = ctk.CTkButton(self.infile_frame, text="Choose file", fg_color="transparent",
                                            border_width=2)
         self.infile_button.grid(row=1, column=1, padx=20, pady=10)
-        self.run_button = ctk.CTkButton(self.infile_frame, text="RUN", width=100, command=self.controller.run)
+        self.run_button = ctk.CTkButton(self.infile_frame, text="RUN", width=100, command=lambda: self.controller.run())
         self.run_button.grid(row=1, column=2, padx=10, pady=10)
         # input file preview
         self.infile_preview = ctk.CTkTextbox(self, height=200)

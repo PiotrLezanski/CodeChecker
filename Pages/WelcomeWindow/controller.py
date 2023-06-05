@@ -29,3 +29,5 @@ class Controller:
         for checkbox in self.view.checkboxes:
             checkbox.deselect()
         recently_used.select()
+        chosen = self.view.checkboxes.index(recently_used)
+        self.singleton.set_default(chosen)
