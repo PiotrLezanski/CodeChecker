@@ -3,6 +3,7 @@ from CppExecution.CppObject import *
 
 class CppFactory:
     def __init__(self, max_exec_time : int):
+        self.object = None
         self.max_exec_time = max_exec_time
 
     # method receives C++ code as filepath and input as string

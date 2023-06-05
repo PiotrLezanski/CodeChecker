@@ -4,8 +4,13 @@ import os
 
 class CppObject:
     def __init__(self, source_code_filepath, input_filepath):
+        self.output_file_name = None
+        self.leaks_logs = None
+        self.output_text = None
+        self.execution_time = None
+        self.compilation_logs = ""
         self.file_path = source_code_filepath
-        with open(input_filepath, 'w+') as file:
+        with open(input_filepath, 'r') as file:
             self.input_text = file.read()
 
         self.input_filepath = input_filepath
@@ -17,8 +22,9 @@ class CppObject:
         # compile
         self.compilation_logs = self.compile()
 
-        # execute programm only, if compilation was succesful
+        # execute program only, if compilation was successful
         if self.compilation_logs == "":
+            self.output_file_name = self.file_path[self.file_path.rfind('/')+1:self.file_path.rfind('.')] + ".out"
             # run with given input and test execution time
             start = datetime.datetime.now() # start timer
             res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input_text, check=True)
@@ -31,9 +37,6 @@ class CppObject:
         # .out name will be named as .in file
         # e.g. output for file test1.in will be saved as test1.out file
         try:
-            # get input file name
-            self.output_file_name = self.file_path[self.file_path.rfind('/')+1:self.file_path.rfind('.')]+".out"
-
             #create .out file
             output_file = open(self.output_file_name, 'w+')
             output_file.write(self.output_text)
@@ -47,7 +50,7 @@ class CppObject:
         return res.stdout.decode('utf-8')
 
     def getLeaksLogs(self):
-        # programm needs to be compiled
+        # program needs to be compiled
        command = 'leaks -atExit -- ./a.out <' + str(self.input_filepath) + '| grep LEAK'
        res = subprocess.run(command, text=True, capture_output=True, shell=True)
        return res.stdout

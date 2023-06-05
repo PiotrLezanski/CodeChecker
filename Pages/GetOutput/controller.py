@@ -1,13 +1,14 @@
-import tkinter
-from tkinter import messagebox
+
 from tkinter import filedialog
 import customtkinter as ctk
+import tkinter
 import subprocess
 from CppExecution.CppFactory import CppFactory
 from Tools.FileSingleton import FileSingleton
 
 class Controller:
     def __init__(self, view):
+        self.code_file_name = None
         self.input_file_name = None
         self.input_text = None
         self.input_file = None
@@ -19,6 +20,7 @@ class Controller:
 
     def open_source_file(self):
         self.code_filepath = filedialog.askopenfilename(title="Choose a source file", initialdir="/", filetypes=[("Cpp files", "*.cpp")])
+        self.code_file_name = self.code_filepath[self.code_filepath.rfind('/')+1:]
         # get working path
         if self.code_filepath != "":
             # change singleton path
@@ -29,50 +31,37 @@ class Controller:
             self.code_text = source_file.read()
 
             self.view.import_source_button._bg_color = "green" # change color when imported
+            self.view.imported_file_name.configure(text=self.code_file_name)
             source_file.close()
 
     def open_input_file(self):
-        self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", "*.txt")])
+        self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", "*.txt"), (".in", "*.in")])
         if self.input_filepath != "":
             # get input to variable
             self.input_file = open(self.input_filepath, 'r')
             self.input_text = self.input_file.read()
 
             self.view.infile_button._bg_color = "green" # change color when imported
-            components = self.input_filepath.split("/")
-            self.input_file_name = components[len(components)-1]
             self.view.infile_preview.delete("0.0", tkinter.END) # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 
     def run_code(self):
         # insert input from textbox to file
-        self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
-        f = open(self.input_filepath, 'w')
-        f.write(self.input_text)
-        f.close()
+        # TODO: get input from textbox, not file (i think it below works)
+        # self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
+        # f = open(self.input_filepath, 'w')
+        # f.write(self.input_text)
+        # f.close()
 
         # create CppFactory and CppObject
         factory = CppFactory(10000)
 
         self.cppobject = factory.CppObjectFromFilepath(self.code_filepath, self.input_filepath)
+        self.cppobject.compile_and_run()
         # if compilation was successful
         if self.cppobject.get_compilation_logs() == "":
             # if run button pushed, generate .out file and its preview
-            self.view.output_frame = ctk.CTkFrame(self.view)
-            self.view.output_frame.grid(row=3, column=1, columnspan=3, padx=20, pady=10, sticky="nesw")
-            try:
-                self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: " + self.cppobject.output_file_name())
-            except:
-                self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: test.out")
-            self.view.output_label.grid(row=3, column=1, padx=10, pady=20)
-            self.view.output_frame.rowconfigure(3,weight=1)
-
-            self.view.toplevel_window = None
-            self.view.preview_button = ctk.CTkButton(self.view.output_frame, text="Preview", fg_color="transparent", border_width=2, command=self.open_preview_window)
-            self.view.preview_button.grid(row=3, column=2, padx=10)
-
-            self.view.save_output_button = ctk.CTkButton(self.view.output_frame, text="Save .out file", command=self.cppobject.save_output_to_file())
-            self.view.save_output_button.grid(row=3, column=3, padx=10)
+            self.view.generate_output_frame()
 
     def open_preview_window(self):
         if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():
