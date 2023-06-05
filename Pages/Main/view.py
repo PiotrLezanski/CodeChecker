@@ -9,14 +9,15 @@ from Pages.CheckEfficiency.view import View as EfficiencyView
 class View(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.title("C++ Code Checker")
+        self.geometry("810x600")
+        ctk.set_appearance_mode("System")
+        ctk.set_default_color_theme("green")
 
         self.sidebar_frame = None
         self.container = None
         self.buttons = []
-
         self.controller = Controller(self)
-        self.title("C++ Code Checker")
-        self.geometry("810x500")
 
         self.configure_grid_layout()
         self.configure_container()
