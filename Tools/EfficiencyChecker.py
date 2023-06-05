@@ -7,7 +7,7 @@ class EfficiencyChecker:
     def __init__(self):
         self.time_limit = 150000
         self.cpp_factory = CppFactory.CppFactory(self.time_limit)
-        # self.cpp_object = self.cpp_factory.CppObjectFromFilepath(FileSingleton.get_filepath1(), "TEST path")
+        # self.cpp_object = self.cpp_factory.CppObjectFromFilepath(FileSingleton.get_filepath(0), "TEST path")
         # self.cpp_object.compile_and_run()
 
     def check_time(self):
