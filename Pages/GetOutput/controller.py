@@ -28,7 +28,7 @@ class Controller:
             source_file.close()
 
     def open_input_file(self):
-        self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", ".in")])
+        self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", "*.txt")])
         if self.input_filepath != "":
             # get input to variable
             self.input_file = open(self.input_filepath, 'r')
@@ -37,7 +37,7 @@ class Controller:
             self.view.infile_button._bg_color = "green" # change color when imported
             components = self.input_filepath.split("/")
             self.input_file_name = components[len(components)-1]
-            
+
             self.view.infile_preview.delete("0.0", tkinter.END) # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 
@@ -58,7 +58,7 @@ class Controller:
             self.view.output_frame = ctk.CTkFrame(self.view)
             self.view.output_frame.grid(row=3, column=1, columnspan=3, padx=20, pady=10, sticky="nesw")
             try:
-                self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: " + cppobject.output_file_name())
+                self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: " + self.cppobject.output_file_name())
             except:
                 self.view.output_label = ctk.CTkLabel(self.view.output_frame, text="Output: test.out")
             self.view.output_label.grid(row=3, column=1, padx=10, pady=20)

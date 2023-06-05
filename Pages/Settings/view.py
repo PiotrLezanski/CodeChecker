@@ -3,7 +3,7 @@ from Pages.Settings.controller import Controller
 
 
 class View(ctk.CTkFrame):
-    def __init__(self, master, controller):
+    def __init__(self, master):
         ctk.CTkFrame.__init__(self, master)
         self.controller = Controller(self)
 

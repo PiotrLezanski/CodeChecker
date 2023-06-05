@@ -1,6 +1,7 @@
 import tkinter
 import customtkinter as ctk
-from controller import Controller
+from Pages.GetOutput.controller import Controller
+
 
 class View(ctk.CTkFrame):
     def __init__(self, parent):
@@ -33,16 +34,3 @@ class View(ctk.CTkFrame):
         # input file preview
         self.infile_preview = ctk.CTkTextbox(self, height=200)
         self.infile_preview.grid(row=2, column=1, padx=20, pady=10, sticky="new")
-
-# class App(ctk.CTk):
-#     def __init__(self):
-#         super().__init__()
-#         self.title("C++ Code Checker")
-#         self.geometry("810x500")
-#         view = View(self)
-#         view.tkraise()
-
-
-if __name__ == "__main__":
-    app = View()
-    app.mainloop()

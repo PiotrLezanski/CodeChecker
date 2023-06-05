@@ -8,10 +8,13 @@ class App(ctk.CTk):
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("green")
         super().__init__()
-        main_view = View()
-        main_view.mainloop()
+        self.main_view = View()
+
+    def run(self):
+        self.after(1, self.destroy())
+        self.main_view.mainloop()
 
 
 if __name__ == "__main__":
     app = App()
-    app.mainloop()
+    app.run()

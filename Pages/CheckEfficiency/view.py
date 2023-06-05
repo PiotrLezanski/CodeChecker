@@ -5,7 +5,7 @@ import tkinter
 
 
 class View(ctk.CTkFrame):
-    def __init__(self, parent, controller, singleton=FileSingleton.FileSingleton.get_instance()):
+    def __init__(self, parent, singleton=FileSingleton.FileSingleton.get_instance()):
         ctk.CTkFrame.__init__(self, parent)
 
         self.controller = Controller(self)
