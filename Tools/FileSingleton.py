@@ -54,6 +54,8 @@ class FileSingleton(object):
         if i is None:
             i = FileSingleton.__default
         if file_path.endswith(".cpp") or file_path.endswith(".h"):
+            backup = FileSingleton.__filepath[i]
+
             try:
                 FileSingleton.__close_file(i)
 
@@ -65,6 +67,9 @@ class FileSingleton(object):
                 FileSingleton.__file[i] = open(file_path, 'r')
                 FileSingleton.__filepath[i] = file_path
             except Exception as e:
+                if backup is not None:
+                    FileSingleton.__file[i] = open(backup, 'r')
+                    FileSingleton.__filepath[i] = backup
                 raise e
         else:
             raise WrongExtensionError("File must be a .cpp or .h file")
@@ -75,6 +80,7 @@ class FileSingleton(object):
             i = FileSingleton.__default
         if FileSingleton.__file[i] is not None:
             FileSingleton.__file[i].close()
+            FileSingleton.__file[i] = None
             FileSingleton.__filepath[i] = None
 
     @staticmethod
