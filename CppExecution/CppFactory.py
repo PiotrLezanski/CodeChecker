@@ -13,9 +13,9 @@ class CppFactory:
 
     def exceededTime(self):
         if self.object.get_execution_time() < self.max_exec_time:
-            return True
-        else:
             return False
+        else:
+            return True
 
     def CppObjectFromString(self, code_filepath : str, input_text : str):
         tmp_file = open("CCtest.in", 'w')
