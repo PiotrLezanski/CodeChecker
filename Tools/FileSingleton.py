@@ -1,11 +1,10 @@
 from Tools.Exceptions import WrongExtensionError
-from typing import Optional, IO
 
 
 class FileSingleton(object):
     __instance = None
-    __file = [Optional[IO], Optional[IO]]
-    __filepath = [Optional[str], Optional[str]]
+    __file = [None, None]
+    __filepath = [None, None]
     __default = 0
 
     def __init__(self):
@@ -13,7 +12,7 @@ class FileSingleton(object):
             raise Exception("Direct initialization of singleton is not allowed. Use get_instance() instead.")
         else:
             FileSingleton.__instance = self
-            
+
     @staticmethod
     def get_instance():
         if FileSingleton.__instance is None:
@@ -25,15 +24,25 @@ class FileSingleton(object):
         FileSingleton.__default = i
 
     @staticmethod
-    def get_file(i=__default):
+    def get_default():
+        return FileSingleton.__default
+
+    @staticmethod
+    def get_file(i=None):
+        if i is None:
+            i = FileSingleton.__default
         return FileSingleton.__file[i]
 
     @staticmethod
-    def get_file_text(i=__default):
+    def get_file_text(i=None):
+        if i is None:
+            i = FileSingleton.__default
         return FileSingleton.__file[i].read()
 
     @staticmethod
-    def get_filepath(i=__default):
+    def get_filepath(i=None):
+        if i is None:
+            i = FileSingleton.__default
         return FileSingleton.__filepath[i]
 
     # before reading new file close old file
@@ -41,7 +50,9 @@ class FileSingleton(object):
     # if you cant use WrongExtensionError, type from Tools.Exceptions import WrongExtensionError
     # if wrong path, raise exception FileNotFoundError
     @staticmethod
-    def set_file(file_path, i=__default):
+    def set_file(file_path, i=None):
+        if i is None:
+            i = FileSingleton.__default
         if file_path.endswith(".cpp") or file_path.endswith(".h"):
             try:
                 FileSingleton.__close_file(i)
@@ -59,10 +70,12 @@ class FileSingleton(object):
             raise WrongExtensionError("File must be a .cpp or .h file")
 
     @staticmethod
-    def __close_file(i=__default):
+    def __close_file(i=None):
+        if i is None:
+            i = FileSingleton.__default
         if FileSingleton.__file[i] is not None:
             FileSingleton.__file[i].close()
-            FileSingleton.__path1 = None
+            FileSingleton.__filepath[i] = None
 
     @staticmethod
     def reset():
@@ -74,3 +87,4 @@ class FileSingleton(object):
         FileSingleton.__file[1] = None
         FileSingleton.__filepath[0] = None
         FileSingleton.__filepath[1] = None
+        FileSingleton.__default = 0
