@@ -8,6 +8,10 @@ class View(ctk.CTkFrame):
     def __init__(self, parent, singleton=FileSingleton.get_instance()):
         ctk.CTkFrame.__init__(self, parent)
 
+        self.output_preview = None
+        self.output_button = None
+        self.toplevel_window = None
+        self.output_frame = None
         self.checkbox = None
         self.run_button = None
         self.infile_preview = None
@@ -91,3 +95,25 @@ class View(ctk.CTkFrame):
         # input file preview
         self.infile_preview = ctk.CTkTextbox(self, height=200)
         self.infile_preview.grid(row=2, column=0, padx=20, pady=10, sticky="new")
+
+    def generate_output_frame(self, text):
+        self.output_frame = ctk.CTkFrame(self)
+        self.output_frame.grid(row=3, column=0, columnspan=3, padx=20, pady=10, sticky="nesw")
+        self.output_button = ctk.CTkButton(self.output_frame, text="Get results",
+                                           border_width=2, command=lambda: self.generate_output_window(text))
+        self.output_button.grid(row=3, column=0, padx=10, pady=10)
+
+    def generate_output_window(self, text):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = ctk.CTkToplevel(self)
+            self.toplevel_window.rowconfigure(0, weight=1)
+            self.toplevel_window.columnconfigure(0, weight=1)
+            self.toplevel_window.title("results preview")
+            self.toplevel_window.geometry("810x600")
+            self.output_preview = ctk.CTkTextbox(self.toplevel_window)
+            self.output_preview.grid(row=0, column=0, padx=10, pady=10, sticky="nesw")
+
+            self.output_preview.delete("0.0", tkinter.END)
+            self.output_preview.insert(tkinter.END, text)
+        else:
+            self.toplevel_window.focus()
