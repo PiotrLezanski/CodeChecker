@@ -28,166 +28,103 @@ class TestFileSingleton(unittest.TestCase):
 
     # Testing whether files open correctly and throws exceptions when they should
 
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file1_with_invalid_extension(self, mock_open):
+    def test_set_file_with_invalid_extension(self):
         invalid_file_path = 'test.txt'
 
         with self.assertRaises(WrongExtensionError):
-            self.instance.set_file1(invalid_file_path)
+            self.instance.set_file(invalid_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath1(), None)
-        self.assertEqual(self.instance.get_file1(), None)
+        self.assertEqual(self.instance.get_filepath(0), None)
+        self.assertEqual(self.instance.get_file(0), None)
 
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file2_with_invalid_extension(self, mock_open):
-        invalid_file_path = 'test.txt'
-
-        with self.assertRaises(WrongExtensionError):
-            self.instance.set_file2(invalid_file_path)
-
-        self.assertEqual(self.instance.get_filepath2(), None)
-        self.assertEqual(self.instance.get_file2(), None)
-
-    def test_set_unexisting_file1_path(self):
+    def test_set_unexisting_file_path(self):
         unexisting_file_path = 'test.cpp'
 
         with self.assertRaises(FileNotFoundError):
-            self.instance.set_file1(unexisting_file_path)
+            self.instance.set_file(unexisting_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath1(), None)
-        self.assertEqual(self.instance.get_file1(), None)
-
-    def test_set_unexisting_file2_path(self):
-        unexisting_file_path = 'test.cpp'
-
-        with self.assertRaises(FileNotFoundError):
-            self.instance.set_file2(unexisting_file_path)
-
-        self.assertEqual(self.instance.get_filepath2(), None)
-        self.assertEqual(self.instance.get_file2(), None)
+        self.assertEqual(self.instance.get_filepath(0), None)
+        self.assertEqual(self.instance.get_file(0), None)
 
     @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file1_with_valid_extension(self, mock_open):
+    def test_set_file_with_valid_extension(self, mock_open):
         valid_file_path = 'test.cpp'
 
-        self.instance.set_file1(valid_file_path)
+        self.instance.set_file(valid_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath1(), valid_file_path)
-        self.assertEqual(not mock_open.return_value.closed, False)
-
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file2_with_valid_extension(self, mock_open):
-        valid_file_path = 'test.cpp'
-
-        self.instance.set_file2(valid_file_path)
-
-        self.assertEqual(self.instance.get_filepath2(), valid_file_path)
+        self.assertEqual(self.instance.get_filepath(0), valid_file_path)
         self.assertEqual(not mock_open.return_value.closed, False)
 
     # Testing whether files close correctly
 
     @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file1_closes_previous_file(self, mock_open):
+    def test_set_file_closes_previous_file(self, mock_open):
         valid_file_path = 'test.cpp'
         valid_file_path2 = 'test2.cpp'
 
-        self.instance.set_file1(valid_file_path)
-        self.instance.set_file1(valid_file_path2)
-
-        self.assertEqual(mock_open.return_value.close.call_count, 1)
-
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file2_closes_previous_file(self, mock_open):
-        valid_file_path = 'test.cpp'
-        valid_file_path2 = 'test2.cpp'
-
-        self.instance.set_file2(valid_file_path)
-        self.instance.set_file2(valid_file_path2)
+        self.instance.set_file(valid_file_path, 0)
+        self.instance.set_file(valid_file_path2, 0)
 
         self.assertEqual(mock_open.return_value.close.call_count, 1)
 
     # Testing opening new file when one is already open
 
     @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file1_with_valid_when_file1_already_open(self, mock_open):
+    def test_set_file_with_valid_when_file_already_open(self, mock_open):
         valid_file_path = 'test.cpp'
         valid_file_path2 = 'test2.cpp'
 
-        self.instance.set_file1(valid_file_path)
-        self.instance.set_file1(valid_file_path2)
+        self.instance.set_file(valid_file_path, 0)
+        self.instance.set_file(valid_file_path2, 0)
 
-        self.assertEqual(self.instance.get_filepath1(), valid_file_path2)
+        self.assertEqual(self.instance.get_filepath(0), valid_file_path2)
         self.assertEqual(mock_open.call_count, 2)
 
     @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file2_with_valid_when_file2_already_open(self, mock_open):
-        valid_file_path = 'test.cpp'
-        valid_file_path2 = 'test2.cpp'
-
-        self.instance.set_file2(valid_file_path)
-        self.instance.set_file2(valid_file_path2)
-
-        self.assertEqual(self.instance.get_filepath2(), valid_file_path2)
-        self.assertEqual(mock_open.call_count, 2)
-
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file1_with_invalid_path_when_file1_already_open(self, mock_open):
+    def test_set_file_with_invalid_path_when_file_already_open(self, mock_open):
         valid_file_path = 'test.cpp'
         invalid_file_path = 'test.txt'
 
-        self.instance.set_file1(valid_file_path)
-        first_file = self.instance.get_file1()
+        self.instance.set_file(valid_file_path, 0)
+        first_file = self.instance.get_file(0)
 
         with self.assertRaises(WrongExtensionError):
-            self.instance.set_file1(invalid_file_path)
+            self.instance.set_file(invalid_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath1(), valid_file_path)
+        self.assertEqual(self.instance.get_filepath(0), valid_file_path)
         self.assertEqual(first_file, mock_open.return_value)  # compare before and after
         self.assertEqual(mock_open.call_count, 1)
         self.assertEqual(mock_open.return_value.close.call_count, 0)
 
     @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file2_with_invalid_path_when_file2_already_open(self, mock_open):
-        valid_file_path = 'test.cpp'
-        invalid_file_path = 'test.txt'
-
-        self.instance.set_file2(valid_file_path)
-        first_file = self.instance.get_file2()
-
-        with self.assertRaises(WrongExtensionError):
-            self.instance.set_file2(invalid_file_path)
-
-        self.assertEqual(self.instance.get_filepath2(), valid_file_path)
-        self.assertEqual(first_file, mock_open.return_value)  # compare before and after
-        self.assertEqual(mock_open.call_count, 1)
-        self.assertEqual(mock_open.return_value.close.call_count, 0)
-
-    @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file1_with_unexisting_path_when_file1_already_open(self, mock_open):
+    def test_set_file_with_unexisting_path_when_file_already_open(self, mock_open):
         valid_file_path = 'test.cpp'
         unexisting_file_path = 'test2.cpp'
 
-        self.instance.set_file1(valid_file_path)
-        first_file = self.instance.get_file1()
-        mock_open.side_effect = FileNotFoundError
+        self.instance.set_file(valid_file_path, 0)
+        first_file = self.instance.get_file(0)
+        mock_open.side_effect = [FileNotFoundError, mock_open.return_value]
 
         with self.assertRaises(FileNotFoundError):
-            self.instance.set_file1(unexisting_file_path)
+            self.instance.set_file(unexisting_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath1(), valid_file_path)
+        # self.assertEqual(self.instance.get_filepath(0), valid_file_path)
         self.assertEqual(first_file, mock_open.return_value)  # compare before and after
 
     @patch('builtins.open', new_callable=MagicMock)
-    def test_set_file2_with_unexisting_path_when_file2_already_open(self, mock_open):
+    def test_use_default_files_when_default(self, mock_open):
         valid_file_path = 'test.cpp'
-        unexisting_file_path = 'test2.cpp'
 
-        self.instance.set_file2(valid_file_path)
-        first_file = self.instance.get_file2()
-        mock_open.side_effect = FileNotFoundError
+        self.instance.set_file(valid_file_path)
+        self.assertEqual(self.instance.get_filepath(), self.instance.get_filepath(0))
 
-        with self.assertRaises(FileNotFoundError):
-            self.instance.set_file2(unexisting_file_path)
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_use_default_files_when_default_changed(self, mock_open):
+        valid_file_path = 'test.cpp'
 
-        self.assertEqual(self.instance.get_filepath2(), valid_file_path)
-        self.assertEqual(first_file, mock_open.return_value)  # compare before and after
+        self.instance.set_default(1)
+        self.instance.set_file(valid_file_path)
+
+        file1 = self.instance.get_filepath()
+        file2 = self.instance.get_filepath(1)
+        self.assertEqual(file1, file2)

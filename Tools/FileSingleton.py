@@ -1,13 +1,11 @@
 from Tools.Exceptions import WrongExtensionError
-from typing import Optional, IO
 
 
 class FileSingleton(object):
     __instance = None
-    __file1: Optional[IO] = None  # file1 is the left file
-    __file2: Optional[IO] = None  # file2 is the right file
-    __filepath1: Optional[str] = None
-    __filepath2: Optional[str] = None
+    __file = [None, None]
+    __filepath = [None, None]
+    __default = 0
 
     def __init__(self):
         if FileSingleton.__instance is not None:
@@ -22,84 +20,77 @@ class FileSingleton(object):
         return FileSingleton.__instance
 
     @staticmethod
-    def get_file1():
-        return FileSingleton.__file1
+    def set_default(i):
+        FileSingleton.__default = i
 
     @staticmethod
-    def get_file2():
-        return FileSingleton.__file2
+    def get_default():
+        return FileSingleton.__default
 
     @staticmethod
-    def get_filepath1():
-        return FileSingleton.__filepath1
+    def get_file(i=None):
+        if i is None:
+            i = FileSingleton.__default
+        return FileSingleton.__file[i]
 
     @staticmethod
-    def get_filepath2():
-        return FileSingleton.__filepath2
+    def get_file_text(i=None):
+        if i is None:
+            i = FileSingleton.__default
+        return FileSingleton.__file[i].read()
+
+    @staticmethod
+    def get_filepath(i=None):
+        if i is None:
+            i = FileSingleton.__default
+        return FileSingleton.__filepath[i]
 
     # before reading new file close old file
     # if wrong extension, raise exception WrongExtensionError
     # if you cant use WrongExtensionError, type from Tools.Exceptions import WrongExtensionError
     # if wrong path, raise exception FileNotFoundError
     @staticmethod
-    def set_file1(file_path):
+    def set_file(file_path, i=None):
+        if i is None:
+            i = FileSingleton.__default
         if file_path.endswith(".cpp") or file_path.endswith(".h"):
+            backup = FileSingleton.__filepath[i]
+
             try:
-                FileSingleton.__close_file1()
+                FileSingleton.__close_file(i)
 
                 # I'm not sure if I should check if file1 and file2 are the same
 
-                # if FileSingleton.__filepath2 == file_path:
+                # if FileSingleton.__filepath[k] == file_path:
                 #     raise SameFilesError("File1 and file2 cannot be the same")
 
-                FileSingleton.__file1 = open(file_path, 'r')
-                FileSingleton.__filepath1 = file_path
+                FileSingleton.__file[i] = open(file_path, 'r')
+                FileSingleton.__filepath[i] = file_path
             except Exception as e:
-                raise e
-        else:
-            raise WrongExtensionError("File must be a .cpp or .h file")
-
-    # before reading new file close old file if and only if new path is correct
-    # if wrong extension, raise exception WrongExtensionError
-    # if you cant use WrongExtensionError, type from Tools.Exceptions import WrongExtensionError
-    # if wrong path, raise exception FileNotFoundError
-    @staticmethod
-    def set_file2(file_path):
-        if file_path.endswith(".cpp") or file_path.endswith(".h"):
-            try:
-                FileSingleton.__close_file2()
-
-                # I'm not sure if I should check if file1 and file2 are the same
-
-                # if FileSingleton.__filepath1 == file_path:
-                #     raise SameFilesError("File1 and file2 cannot be the same")
-
-                FileSingleton.__file2 = open(file_path, 'r')
-                FileSingleton.__filepath2 = file_path
-            except Exception as e:
+                if backup is not None:
+                    FileSingleton.__file[i] = open(backup, 'r')
+                    FileSingleton.__filepath[i] = backup
                 raise e
         else:
             raise WrongExtensionError("File must be a .cpp or .h file")
 
     @staticmethod
-    def __close_file1():
-        if FileSingleton.__file1 is not None:
-            FileSingleton.__file1.close()
-            FileSingleton.__path1 = None
-
-    @staticmethod
-    def __close_file2():
-        if FileSingleton.__file2 is not None:
-            FileSingleton.__file2.close()
-            FileSingleton.__path2 = None
+    def __close_file(i=None):
+        if i is None:
+            i = FileSingleton.__default
+        if FileSingleton.__file[i] is not None:
+            FileSingleton.__file[i].close()
+            FileSingleton.__file[i] = None
+            FileSingleton.__filepath[i] = None
 
     @staticmethod
     def reset():
-        if FileSingleton.__file1 is not None:
-            FileSingleton.__close_file1()
-        if FileSingleton.__file2 is not None:
-            FileSingleton.__close_file2()
-        FileSingleton.__file1 = None
-        FileSingleton.__file2 = None
-        FileSingleton.__filepath1 = None
-        FileSingleton.__filepath2 = None
+        if FileSingleton.__file[0] is not None:
+            FileSingleton.__close_file(0)
+        if FileSingleton.__file[1] is not None:
+            FileSingleton.__close_file(1)
+        FileSingleton.__file[0] = None
+        FileSingleton.__file[1] = None
+        FileSingleton.__filepath[0] = None
+        FileSingleton.__filepath[1] = None
+        FileSingleton.__default = 0
