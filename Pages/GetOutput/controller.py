@@ -24,7 +24,7 @@ class Controller:
         # get working path
         if self.code_filepath != "":
             # change singleton path
-            FileSingleton.set_file1(self.code_filepath)
+            FileSingleton.set_file(self.code_filepath, 0)
 
             # get code to variable
             source_file = open(self.code_filepath, 'r')
@@ -48,10 +48,10 @@ class Controller:
     def run_code(self):
         # insert input from textbox to file
         # TODO: get input from textbox, not file (i think it below works)
-        # self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
-        # f = open(self.input_filepath, 'w')
-        # f.write(self.input_text)
-        # f.close()
+        self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
+        f = open(self.input_filepath, 'w')
+        f.write(self.input_text)
+        f.close()
 
         # create CppFactory and CppObject
         factory = CppFactory(10000)
@@ -61,7 +61,7 @@ class Controller:
         # if compilation was successful
         if self.cppobject.get_compilation_logs() == "":
             # if run button pushed, generate .out file and its preview
-            self.view.generate_output_frame()
+            self.view.generate_output_frame(self.cppobject)
 
     def open_preview_window(self):
         if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():

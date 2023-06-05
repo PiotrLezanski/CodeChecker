@@ -37,12 +37,12 @@ class View(ctk.CTkFrame):
 
     def generate_file_name(self, singleton=FileSingleton.FileSingleton.get_instance()):
         # get file name
-        if str(singleton.get_filepath1()) is None and str(singleton.get_filepath2()) is None:
+        if str(singleton.get_filepath(0)) is None and str(singleton.get_filepath(1)) is None:
             info_about_uploaded_files = "No files uploaded"
-        elif str(singleton.get_filepath1()) is None:
-            info_about_uploaded_files = str(singleton.get_filepath2())
+        elif str(singleton.get_filepath(0)) is None:
+            info_about_uploaded_files = str(singleton.get_filepath(1))
         else:
-            info_about_uploaded_files = str(singleton.get_filepath1())
+            info_about_uploaded_files = str(singleton.get_filepath(0))
 
         # display file name
         self.file_name = ctk.CTkLabel(self.import_file_frame, text=info_about_uploaded_files)

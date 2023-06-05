@@ -24,10 +24,11 @@ class CppObject:
 
         # execute program only, if compilation was successful
         if self.compilation_logs == "":
-            self.output_file_name = self.file_path[self.file_path.rfind('/')+1:self.file_path.rfind('.')] + ".out"
+            self.output_file_name = self.input_filepath[self.input_filepath.rfind('/')+1:self.input_filepath.rfind('.')] + ".out"
             # run with given input and test execution time
             start = datetime.datetime.now() # start timer
             res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input_text, check=True)
+            os.remove("a.out")
             self.output_text = res.stdout
             end = datetime.datetime.now() # end timer
             self.execution_time = int((end-start).total_seconds() * 1000)
@@ -40,8 +41,6 @@ class CppObject:
             #create .out file
             output_file = open(self.output_file_name, 'w+')
             output_file.write(self.output_text)
-
-            print("Output file name: " + self.output_file_name) # test
         except:
             print("Programm needs to be successfuly compiled before saving output.")
 
@@ -58,13 +57,9 @@ class CppObject:
     def check_leaks(self):
         # compile
         self.compilation_logs = self.compile()
-
-        # print("COMP LOGS:\n" + self.compilation_logs)
-
-        # check for leaks only, if compilation was succesful
+        # check for leaks only, if compilation was successful
         if self.compilation_logs == "":
             self.leaks_logs = self.getLeaksLogs()
-            # print("LEAKS LOGS:\n" + self.leaks_logs)
 
     # execution time in ms
     def get_execution_time(self) -> int:

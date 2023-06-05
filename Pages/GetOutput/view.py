@@ -1,9 +1,6 @@
 from Pages.GetOutput.controller import Controller
-from CppExecution.CppFactory import CppFactory
-from CppExecution.CppObject import CppObject
 from Tools.FileSingleton import FileSingleton
 import customtkinter as ctk
-import CppExecution
 
 class View(ctk.CTkFrame):
     def __init__(self, parent):
@@ -32,11 +29,11 @@ class View(ctk.CTkFrame):
         self.import_source_button.grid(row=1, column=2, padx=10, pady=10, sticky="nw")
 
         # get imported file name
-        if FileSingleton.get_filepath1() is None:
+        if FileSingleton.get_filepath(0) is None:
             text = "No file uploaded"
         else:
             self.import_source_button._bg_color = "green"
-            text = FileSingleton.get_filepath1()[FileSingleton.get_filepath1().rfind('/'):]
+            text = FileSingleton.get_filepath(0)[FileSingleton.get_filepath(0).rfind('/'):]
         self.imported_file_name = ctk.CTkLabel(self.code_frame, text=text)
         self.imported_file_name.grid(row=1, column=3)
 
@@ -53,25 +50,21 @@ class View(ctk.CTkFrame):
         self.infile_preview = ctk.CTkTextbox(self, height=200)
         self.infile_preview.grid(row=2, column=1, padx=20, pady=10, sticky="new")
 
-        # self.generate_output_frame()
-
-    def generate_output_frame(self):
+    def generate_output_frame(self, cppobject):
         self.output_frame = ctk.CTkFrame(self)
         self.output_frame.grid(row=3, column=1, columnspan=3, padx=20, pady=10, sticky="nesw")
-        self.output_label = ctk.CTkLabel(self.output_frame, text="Output: test.out")
+        try:
+            self.output_label = ctk.CTkLabel(self.output_frame, text="Output: " + cppobject.get_output_file_name())
+        except:
+            self.output_label = ctk.CTkLabel(self.output_frame, text="Output: test.out")
         self.output_label.grid(row=3, column=1, padx=10, pady=20)
-        # try:
-        #     self.output_label = ctk.CTkLabel(self.output_frame, text="Output: " + cppobject.get_output_file_name())
-        # except:
-        #     self.output_label = ctk.CTkLabel(self.output_frame, text="Output: test.out")
-        # self.output_label.grid(row=3, column=1, padx=10, pady=20)
-        # self.output_frame.rowconfigure(3, weight=1)
-        #
-        # self.toplevel_window = None
-        # self.preview_button = ctk.CTkButton(self.output_frame, text="Preview", fg_color="transparent",
-        #                                          border_width=2, command=self.controller.open_preview_window)
-        # self.preview_button.grid(row=3, column=2, padx=10)
-        #
-        # self.save_output_button = ctk.CTkButton(self.output_frame, text="Save .out file",
-        #                                              command=cppobject.save_output_to_file())
-        # self.save_output_button.grid(row=3, column=3, padx=10)
+        self.output_frame.rowconfigure(3, weight=1)
+
+        self.toplevel_window = None
+        self.preview_button = ctk.CTkButton(self.output_frame, text="Preview", fg_color="transparent",
+                                                 border_width=2, command=self.controller.open_preview_window)
+        self.preview_button.grid(row=3, column=2, padx=10)
+
+        self.save_output_button = ctk.CTkButton(self.output_frame, text="Save .out file",
+                                                     command=cppobject.save_output_to_file)
+        self.save_output_button.grid(row=3, column=3, padx=10)

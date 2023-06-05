@@ -47,7 +47,7 @@ class Controller:
 
     def run(self):
         # no files uploaded
-        if FileSingleton.FileSingleton.get_file1() is None and FileSingleton.FileSingleton.get_file2() is None:
+        if FileSingleton.FileSingleton.get_file(0) is None and FileSingleton.FileSingleton.get_file2() is None:
             return
 
         # no testcase
