@@ -50,6 +50,7 @@ class View(ctk.CTkFrame):
 
     def generate_checkbox_row(self):
 
+        self.checkbox_vars = [tkinter.IntVar() for _ in range(3)]
         # check time checkbox
         self.generate_checkbox(0, "Time")
 
@@ -61,7 +62,8 @@ class View(ctk.CTkFrame):
 
     def generate_checkbox(self, checkbox_column, checkbox_text):
         # generate single checkbox in checkbox row
-        self.check_time_checkbox = ctk.CTkCheckBox(self.import_file_frame, text=checkbox_text, border_width=2)
+        self.check_time_checkbox = ctk.CTkCheckBox(self.import_file_frame, text=checkbox_text,
+                                                   variable=self.checkbox_vars[checkbox_column], border_width=2)
         self.check_time_checkbox.grid(row=1, column=checkbox_column, padx=10, pady=10)
 
     def generate_testcase_container(self):
@@ -73,7 +75,7 @@ class View(ctk.CTkFrame):
         self.infile_button = ctk.CTkButton(self.infile_frame, text="Choose file", fg_color="transparent",
                                            border_width=2)
         self.infile_button.grid(row=1, column=1, padx=20, pady=10)
-        self.run_button = ctk.CTkButton(self.infile_frame, text="RUN", width=100)
+        self.run_button = ctk.CTkButton(self.infile_frame, text="RUN", width=100, command=self.controller.run)
         self.run_button.grid(row=1, column=2, padx=10, pady=10)
         # input file preview
         self.infile_preview = ctk.CTkTextbox(self, height=200)
