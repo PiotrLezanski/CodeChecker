@@ -4,11 +4,11 @@ from CppExecution import CppObject
 
 
 class EfficiencyChecker:
-    def __init__(self):
+    def __init__(self, input_path):
         self.time_limit = 150000
         self.cpp_factory = CppFactory.CppFactory(self.time_limit)
-        # self.cpp_object = self.cpp_factory.CppObjectFromFilepath(FileSingleton.get_filepath(0), "TEST path")
-        # self.cpp_object.compile_and_run()
+        self.cpp_object = self.cpp_factory.CppObjectFromFilepath(FileSingleton.get_filepath(0), input_path)
+        self.cpp_object.compile_and_run()
 
     def check_time(self):
         if not self.cpp_factory.exceededTime():

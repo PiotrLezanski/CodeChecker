@@ -8,10 +8,11 @@ from Tools.FileSingleton import FileSingleton
 
 class Controller:
     def __init__(self, view):
+        self.path = None
         self.input_file = None
         self.input_text = None
+        self.checker = None
         self.view = view
-        self.checker = EfficiencyChecker()
 
     def load_source_file(self):
         path = filedialog.askopenfilename(title="Choose a source file", initialdir="/",
@@ -26,13 +27,13 @@ class Controller:
             FileSingleton.set_file(path)
 
     def open_testcase_file(self):
-        path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
-                                          filetypes=[("Text files", "*.txt")])
-        if path != "":
+        self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
+                                               filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
+        if self.path != "":
             self.view.infile_button._bg_color = "green"  # change color when imported
-            components = path.split("/")
+            components = self.path.split("/")
             input_file_name = components[len(components) - 1]
-            self.input_file = open(path, 'r')
+            self.input_file = open(self.path, 'r')
             self.input_text = self.input_file.read()
             self.view.infile_preview.delete("0.0", tkinter.END)  # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text)  # add content of file
@@ -45,6 +46,8 @@ class Controller:
         # no testcase
         if self.input_text is None:
             return
+
+        self.checker = EfficiencyChecker(self.path)
 
         time = self.checker.check_time() if self.view.checkbox_vars[0].get() == 1 else "Not checked"
         leaks = self.checker.check_leaks() if self.view.checkbox_vars[1].get() == 1 else "Not checked"
