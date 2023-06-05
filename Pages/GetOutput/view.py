@@ -2,7 +2,6 @@ import tkinter
 import customtkinter as ctk
 from Pages.GetOutput.controller import Controller
 
-
 class View(ctk.CTkFrame):
     def __init__(self, parent):
         ctk.CTkFrame.__init__(self, parent)

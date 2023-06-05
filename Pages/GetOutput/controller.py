@@ -9,6 +9,14 @@ from CppExecution.CppFactory import CppFactory
 
 class Controller:
     def __init__(self, view):
+        self.cppobject = None
+        self.input_file_name = None
+        self.input_text = None
+        self.input_file = None
+        self.input_filepath = None
+        self.code_filepath = None
+        self.code_text = None
+        self.source_code_file_name = None
         self.view = view
 
     def open_source_file(self):
