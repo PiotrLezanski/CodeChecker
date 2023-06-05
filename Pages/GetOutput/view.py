@@ -13,6 +13,7 @@ class View(ctk.CTkFrame):
         self.save_output_button = None
         self.preview_button = None
         self.toplevel_window = None
+        self.singleton = FileSingleton.get_instance()
 
         # language picker
         self.code_frame = ctk.CTkFrame(self)
@@ -29,11 +30,11 @@ class View(ctk.CTkFrame):
         self.import_source_button.grid(row=1, column=2, padx=10, pady=10, sticky="nw")
 
         # get imported file name
-        if FileSingleton.get_filepath(0) is None:
+        if self.singleton.get_filepath(0) is None:
             text = "No file uploaded"
         else:
             self.import_source_button._bg_color = "green"
-            text = FileSingleton.get_filepath(0)[FileSingleton.get_filepath(0).rfind('/'):]
+            text = self.singleton.get_filepath(0)[self.singleton.get_filepath(0).rfind('/'):]
         self.imported_file_name = ctk.CTkLabel(self.code_frame, text=text)
         self.imported_file_name.grid(row=1, column=3)
 
