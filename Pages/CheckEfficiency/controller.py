@@ -40,7 +40,7 @@ class Controller:
 
     def run(self):
         # no files uploaded
-        if FileSingleton.get_file(0) is None and FileSingleton.get_file(1) is None:
+        if FileSingleton.get_file() is None:
             return
 
         # no testcase
@@ -49,24 +49,12 @@ class Controller:
 
         self.checker = EfficiencyChecker(self.path)
 
-        time = self.checker.check_time() if self.view.checkbox_vars[0].get() == 1 else "Not checked"
-        leaks = self.checker.check_leaks() if self.view.checkbox_vars[1].get() == 1 else "Not checked"
         logs = self.checker.check_logs() if self.view.checkbox_vars[2].get() == 1 else "Not checked"
-
-        self.generate_popup_window(time, leaks, logs)
-
-    def generate_popup_window(self, time, leaks, logs):
-        # if popup does not exist create new one else focus on it
-        if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():
-            self.view.toplevel_window = ctk.CTkToplevel(self.view)
-            self.view.toplevel_window.title("Results")
-            self.view.toplevel_window.geometry("510x400")
-            self.view.toplevel_window.rowconfigure(0, weight=1)
-            self.view.toplevel_window.columnconfigure(0, weight=1)
-            self.view.result_preview = ctk.CTkTextbox(self.view.toplevel_window, width=200, height=200, disabled=True)
-            self.view.result_preview.grid(row=0, column=0, sticky="nsew")
-            self.view.result_preview.delete("0.0", tkinter.END)  # clear textbox
-            text = "Time: " + time + "\nLeaks: " + leaks + "\nLogs: " + logs
-            self.view.result_preview.insert(tkinter.END, text)  # add content of file
+        if logs == "Compilation successful":
+            time = self.checker.check_time() if self.view.checkbox_vars[0].get() == 1 else "Not checked"
+            leaks = self.checker.check_leaks() if self.view.checkbox_vars[1].get() == 1 else "Not checked"
+            text = "Logs: " + str(logs) + "\n\nTime: " + str(time) + "\n\nLeaks: " + str(leaks) + "\n\n"
         else:
-            self.view.toplevel_window.focus()
+            text = "Logs: " + str(logs) + "\n\n"
+
+        self.view.generate_output_frame(text)
