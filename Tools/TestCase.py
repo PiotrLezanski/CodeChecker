@@ -22,6 +22,12 @@ class TestCase:
     def get_output(self):
         return self.__cpp_object.output_text
 
+    def get_expected_output(self):
+        return self.__expected_test_output
+
+    def set_expected_output(self, expected_output):
+        self.__expected_test_output = expected_output
+
     def compare_output(self):
         return self.__cpp_object.output_text == self.__expected_test_output
 
