@@ -22,3 +22,6 @@ class Controller:
         for i in range(int(self.view.number_of_tests)):
             self.view.generate_testcase_frame(i, curr_row)
             curr_row = curr_row + 3
+
+    def run_testcase(self, i):
+        pass

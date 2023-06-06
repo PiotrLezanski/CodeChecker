@@ -56,7 +56,7 @@ class View(ctk.CTkFrame):
             self.separators[i] = tkinter.ttk.Separator(self.testcase_frames[i], orient="horizontal", style='TSeparator')
             self.output_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Expected output")
             self.output_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=50)
-            self.run_test_buttons[i] = ctk.CTkButton(self.testcase_frames[i], text="Run test", fg_color="transparent", border_width=2)
+            self.run_test_buttons[i] = ctk.CTkButton(self.testcase_frames[i], text="Run test", fg_color="transparent", border_width=2, command=lambda: self.controller.run_testcase(i))
 
     def generate_testcase_frame(self, elements, row):
         self.testcase_frames[elements].grid(row=row, column=0, padx=10, pady=10, sticky="nsew")
