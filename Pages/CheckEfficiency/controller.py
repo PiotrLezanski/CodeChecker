@@ -49,11 +49,12 @@ class Controller:
 
         self.checker = EfficiencyChecker(self.path)
 
-        logs = self.checker.check_logs() if self.view.checkbox_vars[2].get() == 1 else "Not checked"
+        logs = self.checker.check_logs()
         if logs == "Compilation successful":
             time = self.checker.check_time() if self.view.checkbox_vars[0].get() == 1 else "Not checked"
             leaks = self.checker.check_leaks() if self.view.checkbox_vars[1].get() == 1 else "Not checked"
-            text = "Logs: " + str(logs) + "\n\nTime: " + str(time) + "\n\nLeaks: " + str(leaks) + "\n\n"
+            logs_information = logs if self.view.checkbox_vars[2].get() == 1 else "Not checked"
+            text = "Logs: " + str(logs_information) + "\n\nTime: " + str(time) + "\n\nLeaks: " + str(leaks) + "\n\n"
         else:
             text = "Logs: " + str(logs) + "\n\n"
 
