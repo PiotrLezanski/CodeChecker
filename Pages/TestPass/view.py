@@ -6,12 +6,19 @@ from Pages.TestPass.controller import Controller
 class View(ctk.CTkFrame):
     def __init__(self, parent):
         ctk.CTkFrame.__init__(self, parent)
+        self.run_test_buttons = None
+        self.output_texts = None
+        self.output_labels = None
+        self.separators = None
+        self.input_texts = None
+        self.input_labels = None
+        self.testcase_frames = None
         self.number_of_tests = None
         self.controller = Controller(self)
 
         self.import_file_frame = ctk.CTkFrame(self)
-        self.import_file_frame.columnconfigure(0, weight=1)
-        self.import_file_frame.columnconfigure(1, weight=1)
+        self.import_file_frame.columnconfigure(0, weight=0)
+        self.import_file_frame.columnconfigure(1, weight=0)
         self.import_file_frame.columnconfigure(2, weight=1)
         self.import_file_frame.grid(row=0, column=0, padx=20, pady=10, sticky="nsew")
 
@@ -52,29 +59,26 @@ class View(ctk.CTkFrame):
             self.run_test_buttons[i] = ctk.CTkButton(self.testcase_frames[i], text="Run test", fg_color="transparent", border_width=2)
 
     def generate_testcase_frame(self, elements, row):
-        # self.testcase_frame = ctk.CTkFrame(self, border_width=2)
         self.testcase_frames[elements].grid(row=row, column=0, padx=10, pady=10, sticky="nsew")
         self.testcase_frames[elements].grid_columnconfigure(1, weight=1)
-
         # input
-        # self.input_label = ctk.CTkLabel(self.testcase_frame, text="Input")
         self.input_labels[elements].grid(row=0, column=0, padx=10, pady=10)
-        # self.input_text = ctk.CTkTextbox(self.testcase_frame, height=50)
         self.input_texts[elements].grid(row=0, column=1, sticky="ew")
-
         # separator
-        # self.separator = tkinter.ttk.Separator(self.testcase_frame, orient="horizontal", style='TSeparator')
         self.separators[elements].grid(row=1, column=0)
-
         # expected output
-        # self.output_label = ctk.CTkLabel(self.testcase_frame, text="Expected output")
         self.output_labels[elements].grid(row=2, column=0, padx=10, pady=10)
         # self.output_text = ctk.CTkTextbox(self.testcase_frame, height=50)
         self.output_texts[elements].grid(row=2, column=1, sticky="ew")
-
         # run button
-        # self.run_test_button = ctk.CTkButton(self, text="Run test", fg_color="transparent", border_width=2)
         self.run_test_buttons[elements].grid(row=3, sticky="nsew", padx=20, columnspan=2)
 
-
-# TODO: when user decreases number of tests, additional should dissapear
+    def hide_testcases(self):
+        for i in range(int(self.number_of_tests)):
+            self.testcase_frames[i].grid_remove()
+            self.input_labels[i].grid_remove()
+            self.input_texts[i].grid_remove()
+            self.separators[i].grid_remove()
+            self.output_labels[i].grid_remove()
+            self.output_texts[i].grid_remove()
+            self.run_test_buttons[i].grid_remove()
