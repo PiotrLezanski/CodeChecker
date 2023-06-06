@@ -41,8 +41,8 @@ class CppObject:
             #create .out file
             output_file = open(self.output_file_name, 'w+')
             output_file.write(self.output_text)
-        except:
-            print("Programm needs to be successfuly compiled before saving output.")
+        except Exception as e:
+            raise e
 
     def compile(self):
         res = subprocess.run(['g++', self.file_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -52,6 +52,7 @@ class CppObject:
         # program needs to be compiled
        command = 'leaks -atExit -- ./a.out <' + str(self.input_filepath) + '| grep LEAK'
        res = subprocess.run(command, text=True, capture_output=True, shell=True)
+       os.remove("a.out")
        return res.stdout
 
     def check_leaks(self):

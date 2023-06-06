@@ -18,8 +18,9 @@ class CppFactory:
             return True
 
     def CppObjectFromString(self, code_filepath : str, input_text : str):
-        tmp_file = open("CCtest.in", 'w')
+        input_file_filepath = code_filepath[0:code_filepath.rfind('/')] + "/CCtest.in"
+        tmp_file = open(input_file_filepath, 'w+')
         tmp_file.write(input_text)
-        input_filepath = str(os.chdir()) + "/CCtest.in"
-        self.object = CppObject(code_filepath, input_filepath)
+        tmp_file.close()
+        self.object = CppObject(code_filepath, input_file_filepath)
         return self.object

@@ -36,7 +36,7 @@ class Controller:
 
     def open_input_file(self):
         self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", "*.txt"), (".in", "*.in")])
-        if self.input_filepath != "":
+        if self.input_filepath is not None:
             # get input to variable
             self.input_file = open(self.input_filepath, 'r')
             self.input_text = self.input_file.read()
@@ -46,17 +46,17 @@ class Controller:
             self.view.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 
     def run_code(self):
-        # insert input from textbox to file
-        # TODO: get input from textbox, not file (i think it below works)
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
-        f = open(self.input_filepath, 'w')
-        f.write(self.input_text)
-        f.close()
-
-        # create CppFactory and CppObject
         factory = CppFactory(10000)
+        if self.input_filepath is not None:
+            f = open(self.input_filepath, 'w')
+            f.write(self.input_text)
+            f.close()
+            # create CppObject
+            self.cppobject = factory.CppObjectFromFilepath(self.code_filepath, self.input_filepath)
+        else:
+            self.cppobject = factory.CppObjectFromString(self.code_filepath, self.input_text)
 
-        self.cppobject = factory.CppObjectFromFilepath(self.code_filepath, self.input_filepath)
         self.cppobject.compile_and_run()
         # if compilation was successful
         if self.cppobject.get_compilation_logs() == "":
