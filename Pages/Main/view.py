@@ -5,6 +5,7 @@ from Pages.Settings.view import View as SettingsView
 from Pages.GetOutput.view import View as GetOutputView
 from Pages.CheckEfficiency.view import View as EfficiencyView
 from Pages.CodeCompare.view import View as CompareView
+from Pages.TestPass.view import View as TestPassView
 
 
 class View(ctk.CTk):
@@ -33,7 +34,7 @@ class View(ctk.CTk):
             (3, "Efficiency checker", lambda: self.controller.button_on_click(3, EfficiencyView)),
             (4, "Code compare", lambda: self.controller.button_on_click(4, CompareView)),
             (5, "Code difference", lambda: self.controller.button_on_click(5, WelcomeView)),
-            (6, "Test pass", lambda: self.controller.button_on_click(6, WelcomeView)),
+            (6, "Test pass", lambda: self.controller.button_on_click(6, TestPassView)),
             (8, "Settings", lambda: self.controller.button_on_click(7, SettingsView))
         ]
         self.buttons = []
