@@ -21,26 +21,26 @@ class FileSingleton(object):
 
     def set_default(self, i):
         if i == 0 or i == 1:
-            FileSingleton.__default = i
+            self.__default = i
 
     def get_default(self):
-        return FileSingleton.__default
+        return self.__default
 
     def get_file(self, i=None):
         if i is None:
-            i = FileSingleton.__default
-        return FileSingleton.__file[i]
+            i = self.__default
+        return self.__file[i]
 
     def get_file_text(self, i=None):
         if i is None:
-            i = FileSingleton.__default
-        if FileSingleton.__file[i] is not None:
-            return FileSingleton.__file[i].read()
+            i = self.__default
+        if self.__file[i] is not None:
+            return self.__file[i].read()
 
     def get_filepath(self, i=None):
         if i is None:
-            i = FileSingleton.__default
-        return FileSingleton.__filepath[i]
+            i = self.__default
+        return self.__filepath[i]
 
     # before reading new file close old file
     # if wrong extension, raise exception WrongExtensionError
@@ -48,49 +48,49 @@ class FileSingleton(object):
     # if wrong path, raise exception FileNotFoundError
     def set_file(self, file_path, i=None):
         if i is None:
-            i = FileSingleton.__default
+            i = self.__default
         if file_path.endswith(".cpp") or file_path.endswith(".h"):
-            backup = FileSingleton.__filepath[i]
+            backup = self.__filepath[i]
 
             try:
-                FileSingleton.__close_file(i)
+                self.__close_file(i)
 
                 # I'm not sure if I should check if file1 and file2 are the same
 
-                # if FileSingleton.__filepath[k] == file_path:
+                # if self.__filepath[k] == file_path:
                 #     raise SameFilesError("File1 and file2 cannot be the same")
 
-                FileSingleton.__file[i] = open(file_path, 'r')
-                FileSingleton.__filepath[i] = file_path
+                self.__file[i] = open(file_path, 'r')
+                self.__filepath[i] = file_path
             except Exception as e:
                 if backup is not None:
-                    FileSingleton.__file[i] = open(backup, 'r')
-                    FileSingleton.__filepath[i] = backup
+                    self.__file[i] = open(backup, 'r')
+                    self.__filepath[i] = backup
                 raise e
         else:
             raise WrongExtensionError("File must be a .cpp or .h file")
 
     def __close_file(self, i=None):
         if i is None:
-            i = FileSingleton.__default
-        if FileSingleton.__file[i] is not None:
-            FileSingleton.__file[i].close()
-            FileSingleton.__file[i] = None
-            FileSingleton.__filepath[i] = None
+            i = self.__default
+        if self.__file[i] is not None:
+            self.__file[i].close()
+            self.__file[i] = None
+            self.__filepath[i] = None
 
     def reset(self):
-        if FileSingleton.__file[0] is not None:
-            FileSingleton.__close_file(0)
-        if FileSingleton.__file[1] is not None:
-            FileSingleton.__close_file(1)
-        FileSingleton.__file[0] = None
-        FileSingleton.__file[1] = None
-        FileSingleton.__filepath[0] = None
-        FileSingleton.__filepath[1] = None
-        FileSingleton.__default = 0
+        if self.__file[0] is not None:
+            self.__close_file(0)
+        if self.__file[1] is not None:
+            self.__close_file(1)
+        self.__file[0] = None
+        self.__file[1] = None
+        self.__filepath[0] = None
+        self.__filepath[1] = None
+        self.__default = 0
 
     def reset_reading_position(self, i=None):
         if i is None:
-            i = FileSingleton.__default
-        if FileSingleton.__file[i] is not None:
-            FileSingleton.__file[i].seek(0)
+            i = self.__default
+        if self.__file[i] is not None:
+            self.__file[i].seek(0)
