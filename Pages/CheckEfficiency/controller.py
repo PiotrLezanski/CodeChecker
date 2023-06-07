@@ -5,7 +5,6 @@ import customtkinter as ctk
 
 from Tools.FileSingleton import FileSingleton
 
-
 class Controller:
     def __init__(self, view):
         self.path = None

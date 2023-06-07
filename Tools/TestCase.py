@@ -6,7 +6,6 @@ import CppExecution.CppObject as CppObject
 
 class TestCase:
     __default_test_time = 15_000
-
     __cpp_object: Optional[CppObject.CppObject] = None
     __expected_test_output: Optional[str] = None
 
