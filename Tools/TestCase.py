@@ -1,21 +1,19 @@
 from typing import Optional
 
 import CppExecution.CppFactory as CppFactory
-import CppExecution.CppObject
 import CppExecution.CppObject as CppObject
 
 
 class TestCase:
-    __default_test_time = 1000
+    __default_test_time = 15_000
 
-    __cpp_object: Optional[CppExecution.CppObject.CppObject] = None
+    __cpp_object: Optional[CppObject.CppObject] = None
     __expected_test_output: Optional[str] = None
 
-    def __init__(self, code_filepath: str, test_input: str, expected_test_output: str, test_time=__default_test_time):
+    def __init__(self, id: int, input_filepath: str, expected_test_output: str, test_time=__default_test_time):
         self.__expected_test_output = expected_test_output
-        cpp_factory = CppFactory.CppFactory(test_time)
-        self.__cpp_object = cpp_factory.CppObjectFromString(code_filepath, test_input)
-        self.__cpp_object.compile_and_run()
+        cpp_factory = CppFactory.CppFactory()
+        self.__cpp_object = cpp_factory.create_cpp_object(id, input_filepath, test_time)
 
     def get_output(self):
         return self.__cpp_object.get_output()

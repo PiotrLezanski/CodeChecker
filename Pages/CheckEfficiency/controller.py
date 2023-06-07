@@ -26,6 +26,7 @@ class Controller:
             self.view.file_name.configure(text=file_name)
 
             self.__instance.set_file(path)
+
     def open_testcase_file(self):
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
                                                filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
