@@ -13,6 +13,7 @@ class Controller:
         self.input_text = None
         self.checker = None
         self.view = view
+        self.__instance = FileSingleton.get_instance()
 
     def load_source_file(self):
         path = filedialog.askopenfilename(title="Choose a source file", initialdir="/",
@@ -24,8 +25,7 @@ class Controller:
             file_name = components[len(components) - 1]
             self.view.file_name.configure(text=file_name)
 
-            FileSingleton.set_file(path)
-
+            self.__instance.set_file(path)
     def open_testcase_file(self):
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
                                                filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
@@ -40,7 +40,7 @@ class Controller:
 
     def run(self):
         # no files uploaded
-        if FileSingleton.get_file() is None:
+        if self.__instance.get_file() is None:
             return
 
         # no testcase
