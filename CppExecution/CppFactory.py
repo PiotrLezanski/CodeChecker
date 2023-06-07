@@ -11,20 +11,19 @@ class CppFactory:
     def __init__(self):
         self.__max_exec_time = None
 
-    def create_cpp_object(self, id: int, input_filepath: str,
-                                              max_exec_time=__default_max_exec_time):
+    def create_cpp_object(self, _id: int, input_filepath: str, max_exec_time=__default_max_exec_time):
         self.__max_exec_time = max_exec_time
-        if id == 0 or id == 1:
+        if _id == 0 or _id == 1:
             input_file = open(input_filepath, 'r')
             input_text = input_file.read()
             input_file.close()
-            object = CppObject(input_filepath, input_text, id, max_exec_time)
-            object.compile_and_run()
-            return object
+            cpp_object = CppObject(input_filepath, input_text, _id, max_exec_time)
+            cpp_object.compile_and_run()
+            return cpp_object
         else:
             raise WrongIdError("Wrong id given")
 
-    #to ma byc robione przed skorzystaniem z cpp factory bo nie bede robic dwoch konstruktorow dla test casu!!!!!!!!!!
+    # to ma byc robione przed skorzystaniem z cpp factory bo nie bede robic dwoch konstruktorow dla test casu!!!!!!!!!!
     # i check Effi tez to jest redundancja kodu i jest zla praktyka
 
     # def create_cpp_object_with_input_text(self, id: int, input_text: str, max_exec_time=__default_max_exec_time):
@@ -43,5 +42,3 @@ class CppFactory:
     #         return False
     #     else:
     #         return True
-
-

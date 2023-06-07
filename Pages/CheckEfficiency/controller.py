@@ -48,7 +48,7 @@ class Controller:
         if self.input_text is None:
             return
 
-        self.checker = EfficiencyChecker(self.path)
+        self.checker = EfficiencyChecker(self.__instance.get_default(), self.path)
 
         logs = self.checker.check_logs()
         if logs == "Compilation successful":
