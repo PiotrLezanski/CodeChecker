@@ -1,5 +1,4 @@
 import tkinter.ttk
-
 import customtkinter as ctk
 from Pages.TestPass.controller import Controller
 
@@ -42,6 +41,10 @@ class View(ctk.CTkFrame):
         self.load_tests_button.grid(row=1, column=2, padx=10, pady=10)
 
     def create_testcase_components(self):
+        # create RUN ALL button
+        self.run_all_button = ctk.CTkButton(self, text="RUN ALL TESTS")
+        self.run_all_button.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
+
         self.testcase_frames = [None] * int(self.number_of_tests)
         self.input_labels = [None] * int(self.number_of_tests)
         self.input_texts = [None] * int(self.number_of_tests)
@@ -52,11 +55,11 @@ class View(ctk.CTkFrame):
         for i in range(int(self.number_of_tests)):
             self.testcase_frames[i] = ctk.CTkFrame(self, border_width=2)
             self.input_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Input")
-            self.input_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=50)
+            self.input_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=60, width=480)
             self.separators[i] = tkinter.ttk.Separator(self.testcase_frames[i], orient="horizontal", style='TSeparator')
             self.output_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Expected output")
             self.output_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=50)
-            self.run_test_buttons[i] = ctk.CTkButton(self.testcase_frames[i], text="Run test", fg_color="transparent", border_width=2, command=lambda: self.controller.run_testcase(i))
+            self.run_test_buttons[i] = ctk.CTkButton(self.testcase_frames[i], text="Run test", fg_color="transparent", border_width=2, command=lambda x = i: self.controller.run_testcase(x))
 
     def generate_testcase_frame(self, elements, row):
         self.testcase_frames[elements].grid(row=row, column=0, padx=10, pady=10, sticky="nsew")
