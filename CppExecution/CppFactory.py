@@ -1,26 +1,44 @@
 import os
-from CppExecution.CppObject import *
+from CppExecution.CppObject import CppObject
+from Tools.Exceptions import WrongIdError
+from Tools.FileSingleton import FileSingleton
+
 
 class CppFactory:
-    def __init__(self, max_exec_time : int):
-        self.object = None
-        self.max_exec_time = max_exec_time
+    __default_max_exec_time = 15_000
+    __instance = FileSingleton.get_instance()
 
-    # method receives C++ code as filepath and input as string
-    def CppObjectFromFilepath(self, code_filepath : str, input_filepath : str):
-        self.object = CppObject(code_filepath, input_filepath)
-        return self.object
+    def __init__(self):
+        self.__max_exec_time = None
 
-    def exceededTime(self):
-        if self.object.get_execution_time() < self.max_exec_time:
-            return False
+    def create_cpp_object(self, _id: int, input_filepath: str, max_exec_time=__default_max_exec_time):
+        self.__max_exec_time = max_exec_time
+        if _id == 0 or _id == 1:
+            input_file = open(input_filepath, 'r')
+            input_text = input_file.read()
+            input_file.close()
+            cpp_object = CppObject(input_filepath, input_text, _id, max_exec_time)
+            cpp_object.compile_and_run()
+            return cpp_object
         else:
-            return True
+            raise WrongIdError("Wrong id given")
 
-    def CppObjectFromString(self, code_filepath : str, input_text : str):
-        input_file_filepath = code_filepath[0:code_filepath.rfind('/')] + "/CCtest.in"
-        tmp_file = open(input_file_filepath, 'w+')
-        tmp_file.write(input_text)
-        tmp_file.close()
-        self.object = CppObject(code_filepath, input_file_filepath)
-        return self.object
+    # to ma byc robione przed skorzystaniem z cpp factory bo nie bede robic dwoch konstruktorow dla test casu!!!!!!!!!!
+    # i check Effi tez to jest redundancja kodu i jest zla praktyka
+
+    # def create_cpp_object_with_input_text(self, id: int, input_text: str, max_exec_time=__default_max_exec_time):
+    #     if id == 0 or id == 1:
+    #         code_filepath = self.__instance.get_filepath()
+    #         input_filepath = code_filepath[0:code_filepath.rfind('/')] + "/CCtest.in"
+    #         tmp_file = open(input_filepath, 'w+')
+    #         tmp_file.write(input_text)
+    #         tmp_file.close()
+    #         return CppObject(input_filepath, input_text, id, max_exec_time)
+    #     else:
+    #         raise WrongIdError("Wrong id given")
+
+    # def exceededTime(self):
+    #     if self.object.get_execution_time() < self.__max_exec_time:
+    #         return False
+    #     else:
+    #         return True

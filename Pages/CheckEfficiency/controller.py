@@ -21,11 +21,10 @@ class Controller:
         # get working path
         if path != "":
             self.view.import_source_button._bg_color = "green"  # change color when imported
-            components = path.split("/")
-            file_name = components[len(components) - 1]
-            self.view.file_name.configure(text=file_name)
+            self.view.file_name.configure(text=self.__instance.get_filename())
 
             self.__instance.set_file(path)
+
     def open_testcase_file(self):
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
                                                filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
@@ -47,7 +46,7 @@ class Controller:
         if self.input_text is None:
             return
 
-        self.checker = EfficiencyChecker(self.path)
+        self.checker = EfficiencyChecker(self.__instance.get_default(), self.path)
 
         logs = self.checker.check_logs()
         if logs == "Compilation successful":
@@ -59,3 +58,6 @@ class Controller:
             text = "Logs: " + str(logs) + "\n\n"
 
         self.view.generate_output_frame(text)
+
+    def update_code(self, i):
+        self.view.file_name.configure(text=self.__instance.get_filename())

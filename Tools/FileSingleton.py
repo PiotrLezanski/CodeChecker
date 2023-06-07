@@ -1,4 +1,7 @@
+import os.path
+
 from Tools.Exceptions import WrongExtensionError
+from Tools.FileObserver import FileObserver
 
 
 class FileSingleton(object):
@@ -12,6 +15,7 @@ class FileSingleton(object):
             self.__file = [None, None]
             self.__filepath = [None, None]
             self.__default = 0
+            self.observer = FileObserver.get_instance()
 
     @staticmethod
     def get_instance():
@@ -22,6 +26,7 @@ class FileSingleton(object):
     def set_default(self, i):
         if i == 0 or i == 1:
             self.__default = i
+            self.observer.notify(i)
 
     def get_default(self):
         return self.__default
@@ -36,11 +41,22 @@ class FileSingleton(object):
             i = self.__default
         if self.__file[i] is not None:
             return self.__file[i].read()
+        else:
+            return ""
 
     def get_filepath(self, i=None):
         if i is None:
             i = self.__default
-        return self.__filepath[i]
+        if self.__filepath[i] is not None:
+            return self.__filepath[i]
+        return ""
+
+    def get_filename(self, i=None):
+        if i is None:
+            i = self.__default
+        if self.__filepath[i] is not None:
+            return os.path.basename(self.__filepath[i])
+        return ""
 
     # before reading new file close old file
     # if wrong extension, raise exception WrongExtensionError
@@ -67,6 +83,8 @@ class FileSingleton(object):
                     self.__file[i] = open(backup, 'r')
                     self.__filepath[i] = backup
                 raise e
+            finally:
+                self.observer.notify(i)
         else:
             raise WrongExtensionError("File must be a .cpp or .h file")
 

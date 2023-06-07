@@ -47,7 +47,7 @@ class Controller:
 
     def run_code(self):
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
-        factory = CppFactory(10000)
+        factory = CppFactory()
         if self.input_filepath is not None:
             f = open(self.input_filepath, 'w')
             f.write(self.input_text)

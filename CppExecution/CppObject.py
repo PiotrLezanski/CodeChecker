@@ -1,80 +1,89 @@
 import subprocess
 import datetime
 import os
+from typing import Optional, IO
+from Tools.FileSingleton import FileSingleton
+
 
 class CppObject:
-    def __init__(self, source_code_filepath, input_filepath):
-        self.output_file_name = None
-        self.leaks_logs = None
-        self.output_text = None
-        self.execution_time = None
-        self.compilation_logs = ""
-        self.file_path = source_code_filepath
-        with open(input_filepath, 'r') as file:
-            self.input_text = file.read()
+    __instance = FileSingleton.get_instance()
 
-        self.input_filepath = input_filepath
-        # changing working directory to directory from which came file with source code
-        working_directory = self.file_path[0:self.file_path.rfind('/')] + '/'
-        os.chdir(working_directory)
+    # __code_filepath: Optional[str] = None
+    # __id: Optional[int] = None
+    #
+    # __input: Optional[str] = None
+    # __input_filepath: Optional[str] = None
+    # __output: Optional[str] = None
+    #
+    # __compilation_logs: Optional[str] = None
+    # __leaks_logs: Optional[str] = None
+    # __max_execution_time: Optional[int] = None
+    # __execution_time: Optional[int] = None
+
+    def __init__(self, input_filepath: str, input: str, id: int, exec_time):
+        self.__compilation_logs = None
+        self.__execution_time = None
+        self.__leaks_logs = None
+        self.__output = None
+
+        self.__input = input
+        self.__input_filepath = input_filepath
+        self.__max_execution_time = exec_time
+        self.__id = id
+        self.__code_filepath = self.__instance.get_filepath(id)
 
     def compile_and_run(self):
-        # compile
-        self.compilation_logs = self.compile()
+        self.__compilation_logs = self.__compile()
 
-        # execute program only, if compilation was successful
-        if self.compilation_logs == "":
-            self.output_file_name = self.input_filepath[self.input_filepath.rfind('/')+1:self.input_filepath.rfind('.')] + ".out"
+        # tu musi byc robiony drugi watek ktory usypia na execution time i
+        # zabija kompilowanie zeby while true nie dzialalo
+
+        if self.__compilation_logs == "":
             # run with given input and test execution time
-            start = datetime.datetime.now() # start timer
-            res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input_text, check=True)
+            start = datetime.datetime.now()  # start timer
+            res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.__input, check=True)
             os.remove("a.out")
-            self.output_text = res.stdout
-            end = datetime.datetime.now() # end timer
-            self.execution_time = int((end-start).total_seconds() * 1000)
+            self.__output = res.stdout
+            end = datetime.datetime.now()  # end timer
+            self.__execution_time = int((end - start).total_seconds() * 1000)
 
-    # function also returns name of .out file
-    def save_output_to_file(self):
-        # .out name will be named as .in file
-        # e.g. output for file test1.in will be saved as test1.out file
-        try:
-            #create .out file
-            output_file = open(self.output_file_name, 'w+')
-            output_file.write(self.output_text)
-        except Exception as e:
-            raise e
-
-    def compile(self):
-        res = subprocess.run(['g++', self.file_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    def __compile(self):
+        res = subprocess.run(['g++', self.__code_filepath], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return res.stdout.decode('utf-8')
 
-    def getLeaksLogs(self):
-        # program needs to be compiled
-       command = 'leaks -atExit -- ./a.out <' + str(self.input_filepath) + '| grep LEAK'
-       res = subprocess.run(command, text=True, capture_output=True, shell=True)
-       os.remove("a.out")
-       return res.stdout
+    def save_output_to_file(self) -> IO:
+        if self.__output is not None:
+            output_file_name = self.__input_filepath[self.__input_filepath.rfind('/') + 1:self.__input_filepath.rfind('.')] + ".out"
+            try:
+                output_file = open(output_file_name, 'w+')
+                output_file.write(self.__output)
+                output_file.close()
+                return output_file
+            except Exception as e:
+                raise e
 
     def check_leaks(self):
-        # compile
-        self.compilation_logs = self.compile()
         # check for leaks only, if compilation was successful
-        if self.compilation_logs == "":
-            self.leaks_logs = self.getLeaksLogs()
+        if self.__compilation_logs == "":
+            self.__leaks_logs = self.__run_leaks_test()
+
+    def __run_leaks_test(self):
+        # program needs to be compiled
+        command = 'leaks -atExit -- ./a.out <' + str(self.__input_filepath) + '| grep LEAK'
+        res = subprocess.run(command, text=True, capture_output=True, shell=True)
+        os.remove("a.out")
+        return res.stdout
+
+    def get_leaks_logs(self):
+        return self.__leaks_logs
 
     # execution time in ms
     def get_execution_time(self) -> int:
-        return self.execution_time
+        return self.__execution_time
 
     def get_output(self) -> str:
-        return self.output_text
+        return self.__output
 
     # if function return nothing, compilation was successful
     def get_compilation_logs(self) -> str:
-        return self.compilation_logs
-
-    def get_leaks_logs(self):
-        return self.leaks_logs
-
-    def get_output_file_name(self):
-        return self.output_file_name
+        return self.__compilation_logs

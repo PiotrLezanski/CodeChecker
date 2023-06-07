@@ -14,6 +14,7 @@ class Controller:
         self.input_file = None
         self.path = None
         self.view = view
+        self.singleton = FileSingleton.get_instance()
 
     def load_source_file(self, file_number):
         path = filedialog.askopenfilename(title="Choose a source file", initialdir="/",
@@ -28,10 +29,10 @@ class Controller:
             file_name = components[len(components) - 1]
             if file_number == 0:
                 self.view.first_file_name.configure(text=file_name)
-                FileSingleton.set_file(path, 0)
+                self.singleton.set_file(path, 0)
             elif file_number == 1:
                 self.view.second_file_name.configure(text=file_name)
-                FileSingleton.set_file(path, 1)
+                self.singleton.set_file(path, 1)
 
     def open_testcase_file(self):
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
@@ -46,7 +47,7 @@ class Controller:
             self.view.infile_preview.insert(tkinter.END, self.input_text)  # add content of file
 
     def run(self):
-        if FileSingleton.get_file(0) is None and FileSingleton.get_file(1) is None:
+        if self.singleton.get_file(0) is None and self.singleton.get_file(1) is None:
             return
 
         if self.input_text is None:
@@ -90,6 +91,6 @@ class Controller:
 
         self.view.generate_output_frame(text)
 
-
-
-
+    def update_code(self, i):
+        self.view.first_file_name.configure(text=self.singleton.get_filename(0))
+        self.view.second_file_name.configure(text=self.singleton.get_filename(1))
