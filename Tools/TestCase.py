@@ -9,7 +9,7 @@ class TestCase:
 
     __test_time: Optional[int] = None
 
-    __cpp_object: Optional[CppObject] = None
+    __cpp_object = None
     __expected_test_output: Optional[str] = None
 
     def __init__(self, code_filepath: str, test_input: str, expected_test_output: str, test_time=__default_test_time):
