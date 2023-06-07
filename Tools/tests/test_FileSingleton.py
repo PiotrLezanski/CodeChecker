@@ -128,3 +128,32 @@ class TestFileSingleton(unittest.TestCase):
         file1 = self.instance.get_filepath()
         file2 = self.instance.get_filepath(1)
         self.assertEqual(file1, file2)
+
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_use_default_file_when_reading(self, mock_open):
+        valid_file_path = 'test.cpp'
+        self.instance.set_default(1)
+        self.instance.set_file(valid_file_path)
+        mock_open.return_value.read.return_value = 'test'
+
+        file1 = self.instance.get_file_text()
+        file2 = self.instance.get_file_text(1)
+
+        self.assertEqual(file1, file2)
+
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_reading_from_unexisting_file(self, mock_open):
+        file = self.instance.get_file_text()
+
+        self.assertEqual(file, None)
+
+    @patch('builtins.open', new_callable=MagicMock)
+    def test_reseting_reading_line(self, mock_open):
+        valid_file_path = 'test.cpp'
+        self.instance.set_file(valid_file_path)
+
+        self.instance.reset_reading_position()
+
+        self.assertEqual(mock_open.return_value.seek.call_count, 1)
+        mock_open.return_value.seek.assert_called_once_with(0)
+
