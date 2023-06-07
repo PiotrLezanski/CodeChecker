@@ -58,3 +58,6 @@ class Controller:
             self.create_testcase(i)
             self.view.output_texts[i].delete("0.0", "end")
             self.view.output_texts[i].insert("0.0", str(self.generated_output))
+
+    def update_code(self, i):
+        self.view.file_name.configure(text=self.singleton.get_filename())
