@@ -3,15 +3,15 @@ from Tools.Exceptions import WrongExtensionError
 
 class FileSingleton(object):
     __instance = None
-    __file = [None, None]
-    __filepath = [None, None]
-    __default = 0
 
     def __init__(self):
         if FileSingleton.__instance is not None:
             raise Exception("Direct initialization of singleton is not allowed. Use get_instance() instead.")
         else:
             FileSingleton.__instance = self
+            self.__file = [None, None]
+            self.__filepath = [None, None]
+            self.__default = 0
 
     @staticmethod
     def get_instance():
