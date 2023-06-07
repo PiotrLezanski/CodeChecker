@@ -26,7 +26,7 @@ class View(ctk.CTkFrame):
         self.import_source_label = ctk.CTkLabel(self.import_file_frame, text="Import source code")
         self.import_source_label.grid(row=0, column=0, padx=10, pady=10)
         self.import_source_button = ctk.CTkButton(self.import_file_frame, text="Choose file", fg_color="transparent",
-                                                  border_width=2, command=self.controller.open_source_file())
+                                                  border_width=2, command=self.controller.open_source_file)
         self.import_source_button.grid(row=0, column=1, padx=10, pady=10)
 
         # display file name
