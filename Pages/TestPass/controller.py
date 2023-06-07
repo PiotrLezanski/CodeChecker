@@ -61,3 +61,5 @@ class Controller:
 
     def update_code(self, i):
         self.view.file_name.configure(text=self.singleton.get_filename())
+
+# TODO: - run all button, - exceptions (e.x. file not given)
