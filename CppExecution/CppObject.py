@@ -4,59 +4,43 @@ import os
 from typing import Optional, IO
 from Tools.FileSingleton import FileSingleton
 
-
 class CppObject:
-    __instance = FileSingleton.get_instance()
-
-    # __code_filepath: Optional[str] = None
-    # __id: Optional[int] = None
-    #
-    # __input: Optional[str] = None
-    # __input_filepath: Optional[str] = None
-    # __output: Optional[str] = None
-    #
-    # __compilation_logs: Optional[str] = None
-    # __leaks_logs: Optional[str] = None
-    # __max_execution_time: Optional[int] = None
-    # __execution_time: Optional[int] = None
-
-    def __init__(self, input_filepath: str, input: str, id: int, exec_time):
-        self.__compilation_logs = None
-        self.__execution_time = None
-        self.__leaks_logs = None
-        self.__output = None
-
-        self.__input = input
-        self.__input_filepath = input_filepath
-        self.__max_execution_time = exec_time
-        self.__id = id
-        self.__code_filepath = self.__instance.get_filepath(id)
+    def __init__(self, id: int, input_filepath: str, input_text: str, exec_time):
+        self.compilation_logs = None
+        self.execution_time = None
+        self.leaks_logs = None
+        self.output = None
+        self.input = input_text
+        self.input_filepath = input_filepath
+        self.max_execution_time = exec_time
+        self.id = id
+        self.code_filepath = FileSingleton.get_instance().get_filepath(id)
 
     def compile_and_run(self):
-        self.__compilation_logs = self.__compile()
+        self.compilation_logs = self.compile()
 
         # tu musi byc robiony drugi watek ktory usypia na execution time i
         # zabija kompilowanie zeby while true nie dzialalo
 
-        if self.__compilation_logs == "":
+        if self.compilation_logs == "":
             # run with given input and test execution time
             start = datetime.datetime.now()  # start timer
-            res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.__input, check=True)
+            res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input, check=True)
             os.remove("a.out")
-            self.__output = res.stdout
+            self.output = res.stdout
             end = datetime.datetime.now()  # end timer
-            self.__execution_time = int((end - start).total_seconds() * 1000)
+            self.execution_time = int((end - start).total_seconds() * 1000)
 
-    def __compile(self):
-        res = subprocess.run(['g++', self.__code_filepath], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    def compile(self):
+        res = subprocess.run(['g++', self.code_filepath], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         return res.stdout.decode('utf-8')
 
     def save_output_to_file(self) -> IO:
-        if self.__output is not None:
-            output_file_name = self.__input_filepath[self.__input_filepath.rfind('/') + 1:self.__input_filepath.rfind('.')] + ".out"
+        if self.output is not None:
+            output_file_name = self.input_filepath[self.input_filepath.rfind('/') + 1:self.input_filepath.rfind('.')] + ".out"
             try:
                 output_file = open(output_file_name, 'w+')
-                output_file.write(self.__output)
+                output_file.write(self.output)
                 output_file.close()
                 return output_file
             except Exception as e:
@@ -64,26 +48,26 @@ class CppObject:
 
     def check_leaks(self):
         # check for leaks only, if compilation was successful
-        if self.__compilation_logs == "":
-            self.__leaks_logs = self.__run_leaks_test()
+        if self.compilation_logs == "":
+            self.leaks_logs = self.run_leaks_test()
 
-    def __run_leaks_test(self):
+    def run_leaks_test(self):
         # program needs to be compiled
-        command = 'leaks -atExit -- ./a.out <' + str(self.__input_filepath) + '| grep LEAK'
+        command = 'leaks -atExit -- ./a.out <' + str(self.input_filepath) + '| grep LEAK'
         res = subprocess.run(command, text=True, capture_output=True, shell=True)
         os.remove("a.out")
         return res.stdout
 
     def get_leaks_logs(self):
-        return self.__leaks_logs
+        return self.leaks_logs
 
     # execution time in ms
     def get_execution_time(self) -> int:
-        return self.__execution_time
+        return self.execution_time
 
     def get_output(self) -> str:
-        return self.__output
+        return self.output
 
     # if function return nothing, compilation was successful
     def get_compilation_logs(self) -> str:
-        return self.__compilation_logs
+        return self.compilation_logs
