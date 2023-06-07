@@ -19,28 +19,25 @@ class FileSingleton(object):
             FileSingleton()
         return FileSingleton.__instance
 
-    @staticmethod
-    def set_default(i):
-        FileSingleton.__default = i
+    def set_default(self, i):
+        if i == 0 or i == 1:
+            FileSingleton.__default = i
 
-    @staticmethod
-    def get_default():
+    def get_default(self):
         return FileSingleton.__default
 
-    @staticmethod
-    def get_file(i=None):
+    def get_file(self, i=None):
         if i is None:
             i = FileSingleton.__default
         return FileSingleton.__file[i]
 
-    @staticmethod
-    def get_file_text(i=None):
+    def get_file_text(self, i=None):
         if i is None:
             i = FileSingleton.__default
-        return FileSingleton.__file[i].read()
+        if FileSingleton.__file[i] is not None:
+            return FileSingleton.__file[i].read()
 
-    @staticmethod
-    def get_filepath(i=None):
+    def get_filepath(self, i=None):
         if i is None:
             i = FileSingleton.__default
         return FileSingleton.__filepath[i]
@@ -49,8 +46,7 @@ class FileSingleton(object):
     # if wrong extension, raise exception WrongExtensionError
     # if you cant use WrongExtensionError, type from Tools.Exceptions import WrongExtensionError
     # if wrong path, raise exception FileNotFoundError
-    @staticmethod
-    def set_file(file_path, i=None):
+    def set_file(self, file_path, i=None):
         if i is None:
             i = FileSingleton.__default
         if file_path.endswith(".cpp") or file_path.endswith(".h"):
@@ -74,8 +70,7 @@ class FileSingleton(object):
         else:
             raise WrongExtensionError("File must be a .cpp or .h file")
 
-    @staticmethod
-    def __close_file(i=None):
+    def __close_file(self, i=None):
         if i is None:
             i = FileSingleton.__default
         if FileSingleton.__file[i] is not None:
@@ -83,8 +78,7 @@ class FileSingleton(object):
             FileSingleton.__file[i] = None
             FileSingleton.__filepath[i] = None
 
-    @staticmethod
-    def reset():
+    def reset(self):
         if FileSingleton.__file[0] is not None:
             FileSingleton.__close_file(0)
         if FileSingleton.__file[1] is not None:
@@ -94,3 +88,9 @@ class FileSingleton(object):
         FileSingleton.__filepath[0] = None
         FileSingleton.__filepath[1] = None
         FileSingleton.__default = 0
+
+    def reset_reading_position(self, i=None):
+        if i is None:
+            i = FileSingleton.__default
+        if FileSingleton.__file[i] is not None:
+            FileSingleton.__file[i].seek(0)
