@@ -21,9 +21,7 @@ class Controller:
         # get working path
         if path != "":
             self.view.import_source_button._bg_color = "green"  # change color when imported
-            components = path.split("/")
-            file_name = components[len(components) - 1]
-            self.view.file_name.configure(text=file_name)
+            self.view.file_name.configure(text=self.__instance.get_filename())
 
             self.__instance.set_file(path)
 
@@ -60,3 +58,6 @@ class Controller:
             text = "Logs: " + str(logs) + "\n\n"
 
         self.view.generate_output_frame(text)
+
+    def update_code(self, i):
+        self.view.file_name.configure(text=self.__instance.get_filename())
