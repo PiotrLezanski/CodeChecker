@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from Pages.Main.model import Model
+from Tools.FileObserver import FileObserver
 
 DEFAULT = "#2fa572"
 HOVER = "#106a43"
@@ -12,13 +13,9 @@ class Controller:
         self.frames = {}
 
     def load_frames(self, container):
-        pages = self.model.load_pages()
-        for page in pages:
-            frame = page(container)
-            frame.grid(row=0, column=0, sticky="nsew")
-            container.grid_rowconfigure(0, weight=1)
-            container.grid_columnconfigure(0, weight=1)
-            self.frames[page] = frame
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        self.frames = self.model.load_pages(container)
 
     @staticmethod
     def generate_button(frame, position, name, expression):

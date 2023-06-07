@@ -3,10 +3,11 @@ from Pages.WelcomeWindow.controller import Controller
 
 
 class View(ctk.CTkFrame):
-    def __init__(self, master):
-        ctk.CTkFrame.__init__(self, master)
+    def __init__(self, parent):
+        ctk.CTkFrame.__init__(self, parent)
         self.controller = Controller(self)
         self.checkboxes = []
+        self.text_boxes = []
 
         self.content = ctk.CTkFrame(self)
         self.content.pack(fill="x", padx=20, pady=20)
@@ -24,8 +25,8 @@ class View(ctk.CTkFrame):
 
     def generate_codes(self):
         grid = ctk.CTkFrame(self.content)
-        self.generate_single_code(grid, 0, 1)
-        self.generate_single_code(grid, 2, 2)
+        self.generate_single_code(grid, 0, 0)
+        self.generate_single_code(grid, 2, 1)
         grid.grid_columnconfigure(0, weight=1)
         grid.grid_columnconfigure(2, weight=1)
         grid.pack(fill="x", expand=1, padx=20, pady=20)
@@ -40,8 +41,9 @@ class View(ctk.CTkFrame):
         label.grid(row=1, column=column_number, columnspan=2, sticky="nsew", padx=2, pady=2)
 
         file_button = ctk.CTkButton(grid, text="Choose file", fg_color="transparent", border_width=2,
-                                    command=lambda: self.controller.load_file(_id, label, text_box))
+                                    command=lambda: self.controller.load_file(_id, label))
         file_button.grid(row=0, column=column_number + 1, padx=5, pady=5)
 
         text_box = ctk.CTkTextbox(grid, wrap="word")
+        self.text_boxes.append(text_box)
         text_box.grid(row=2, column=column_number, columnspan=2, sticky="nsew", padx=10, pady=10)

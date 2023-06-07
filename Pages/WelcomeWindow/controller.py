@@ -1,4 +1,3 @@
-import customtkinter as ctk
 from tkinter import filedialog
 from Tools.FileSingleton import FileSingleton
 
@@ -8,22 +7,16 @@ class Controller:
         self.view = view
         self.singleton = FileSingleton.get_instance()
 
-    def load_file(self, _id, label, text_box):
+    def load_file(self, _id, label):
         filepath = filedialog.askopenfilename(title="Choose a code file",
                                               initialdir="/",
                                               filetypes=[(".cpp", "*.cpp")])
-        file_name = None
-        file_code = None
-        if _id == 1:
-            self.singleton.set_file1(filepath)
-            file_name = 1
-            file_code = self.singleton.get_file1_text()
-        elif _id == 2:
-            self.singleton.set_file2(filepath)
-            file_name = 2
-            file_code = self.singleton.get_file2_text()
-        label.configure(text=file_name)
-        text_box.insert("0.0", file_code)
+        if filepath != "":
+            self.singleton.set_file(filepath, _id)
+            file_name = self.singleton.get_filename(_id)
+            file_code = self.singleton.get_file_text(_id)
+            label.configure(text=file_name)
+            self.view.text_boxes[_id].insert("0.0", file_code)
 
     def update_checkboxes(self, recently_used):
         for checkbox in self.view.checkboxes:
@@ -31,3 +24,8 @@ class Controller:
         recently_used.select()
         chosen = self.view.checkboxes.index(recently_used)
         self.singleton.set_default(chosen)
+
+    def update_code(self, _id):
+        boxes = self.view.text_boxes
+        if len(boxes) > _id:
+            boxes[_id].insert("0.0", self.singleton.get_file_text(_id))
