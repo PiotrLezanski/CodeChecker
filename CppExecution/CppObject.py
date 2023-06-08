@@ -56,7 +56,6 @@ class CppObject:
         # program needs to be compiled
         command = 'leaks -atExit -- ./a.out <' + str(self.input_filepath) + '| grep LEAK'
         res = subprocess.run(command, text=True, capture_output=True, shell=True)
-        os.remove("a.out")
         return res.stdout
 
     def get_leaks_logs(self):
