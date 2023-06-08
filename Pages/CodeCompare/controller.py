@@ -61,8 +61,8 @@ class Controller:
         if self.input_text is None:
             return
 
-        self.checker[0] = EfficiencyChecker(0, self.first_path)
-        self.checker[1] = EfficiencyChecker(1, self.second_path)
+        self.checker[0] = EfficiencyChecker(0, self.singleton.get_filepath(0))
+        self.checker[1] = EfficiencyChecker(1, self.singleton.get_filepath(1))
 
         logs = ["", ""]
         logs[0] = self.checker[0].check_logs()
