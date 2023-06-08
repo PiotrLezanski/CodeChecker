@@ -5,6 +5,7 @@ from Pages.TestPass.controller import Controller
 class View(ctk.CTkFrame):
     def __init__(self, parent):
         ctk.CTkFrame.__init__(self, parent)
+        self.run_all_button = None
         self.run_test_buttons = None
         self.output_texts = None
         self.output_labels = None
@@ -53,6 +54,7 @@ class View(ctk.CTkFrame):
         self.output_labels = [None] * int(self.number_of_tests)
         self.output_texts = [None] * int(self.number_of_tests)
         self.run_test_buttons = [None] * int(self.number_of_tests)
+
         for i in range(int(self.number_of_tests)):
             self.testcase_frames[i] = ctk.CTkFrame(self, border_width=2)
             self.input_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Input")

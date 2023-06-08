@@ -6,7 +6,6 @@ from CppExecution.CppFactory import CppFactory, CppObject
 
 class Controller:
     def __init__(self, view):
-        self.result = ""
         self.generated_output = None
         self.code_filepath = None
         self.output_texts = None
@@ -39,7 +38,6 @@ class Controller:
             curr_row = curr_row + 3
 
     def create_testcase(self, i):
-
         test_case = TestCase(self.singleton.get_default(), self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
         if test_case.get_compilation_logs() != "":
             # compilation unsuccessful
@@ -52,25 +50,26 @@ class Controller:
                 self.view.run_test_buttons[i]._bg_color = "green"
             else:
                 tmp = self.view.output_texts[i].get("0.0", "end")
-                self.generated_output = f"Test {i+1}:\nYour output:\n{tmp}\nExpected output:\n{test_case.get_output()}"
+                self.generated_output = f"\nTest {i+1}: NOT PASSED\nYour output:\n{tmp}\nExpected output:\n{test_case.get_output()}"
                 self.view.run_test_buttons[i]._bg_color = "red"
 
     def run_testcase(self, i):
-        if self.view.input_texts[i] is not None and self.view.output_texts[i] is not None:
+        if self.view.input_texts[i] is not None and self.view.output_texts[i] is not None and self.singleton.get_filepath() != "":
             self.create_testcase(i)
             self.view.output_texts[i].delete("0.0", "end")
             self.view.output_texts[i].insert("0.0", str(self.generated_output))
         else:
-            raise Exception("You need to provide input and expected output")
+            messagebox.showerror("Error message", "You need to provide input, expected output and .cpp file")
 
     def run_all_testcases(self):
+        result = ""
         for i in range(int(self.view.number_of_tests)):
             self.create_testcase(i)
-            self.result = self.result + self.generated_output + '\n'
+            result = result + self.generated_output + '\n'
 
-        self.open_preview_window()
+        self.open_preview_window(result)
 
-    def open_preview_window(self):
+    def open_preview_window(self, result):
         if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():
             self.view.toplevel_window = ctk.CTkToplevel(self.view)  # create window if its None or destroyed
             self.view.toplevel_window.rowconfigure(0, weight=1)
@@ -81,7 +80,7 @@ class Controller:
             self.view.output_preview.grid(row=0, column=0, sticky="nesw")
 
             self.view.output_preview.delete("0.0", "end")
-            self.view.output_preview.insert("0.0", self.result)
+            self.view.output_preview.insert("0.0", result)
         else:
             self.view.toplevel_window.focus()
 
