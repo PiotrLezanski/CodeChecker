@@ -13,6 +13,7 @@ class View(ctk.CTkFrame):
         self.input_labels = None
         self.testcase_frames = None
         self.number_of_tests = None
+        self.toplevel_window = None
         self.controller = Controller(self)
 
         self.import_file_frame = ctk.CTkFrame(self)
@@ -42,7 +43,7 @@ class View(ctk.CTkFrame):
 
     def create_testcase_components(self):
         # create RUN ALL button
-        self.run_all_button = ctk.CTkButton(self, text="RUN ALL TESTS")
+        self.run_all_button = ctk.CTkButton(self, text="RUN ALL TESTS", command=self.controller.run_all_testcases)
         self.run_all_button.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
         self.testcase_frames = [None] * int(self.number_of_tests)
@@ -55,7 +56,7 @@ class View(ctk.CTkFrame):
         for i in range(int(self.number_of_tests)):
             self.testcase_frames[i] = ctk.CTkFrame(self, border_width=2)
             self.input_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Input")
-            self.input_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=60, width=480)
+            self.input_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=60, width=460)
             self.separators[i] = tkinter.ttk.Separator(self.testcase_frames[i], orient="horizontal", style='TSeparator')
             self.output_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Expected output")
             self.output_texts[i] = ctk.CTkTextbox(self.testcase_frames[i], height=50)

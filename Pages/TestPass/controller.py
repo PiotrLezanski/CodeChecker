@@ -6,6 +6,7 @@ from CppExecution.CppFactory import CppFactory, CppObject
 
 class Controller:
     def __init__(self, view):
+        self.result = ""
         self.generated_output = None
         self.code_filepath = None
         self.output_texts = None
@@ -38,19 +39,20 @@ class Controller:
             curr_row = curr_row + 3
 
     def create_testcase(self, i):
-        # self.testcases_list = [None] * int(self.view.number_of_tests)
-        test_case = TestCase(0, self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
+
+        test_case = TestCase(self.singleton.get_default(), self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
         if test_case.get_compilation_logs() != "":
             # compilation unsuccessful
-            self.generated_output = "Compilation error:\n" + str(test_case.get_compilation_logs())
+            self.generated_output = f"Test {i+1}: Compilation error:\n" + str(test_case.get_compilation_logs())
             self.view.run_test_buttons[i]._bg_color = "blue"
         else:
             # compilation successful, now compare outputs
             if test_case.compare_output():
-                self.generated_output = "PASSED"
+                self.generated_output = f"Test {i+1}: PASSED"
                 self.view.run_test_buttons[i]._bg_color = "green"
             else:
-                self.generated_output = "WRONG"
+                tmp = self.view.output_texts[i].get("0.0", "end")
+                self.generated_output = f"Test {i+1}:\nYour output:\n{tmp}\nExpected output:\n{test_case.get_output()}"
                 self.view.run_test_buttons[i]._bg_color = "red"
 
     def run_testcase(self, i):
@@ -58,6 +60,30 @@ class Controller:
             self.create_testcase(i)
             self.view.output_texts[i].delete("0.0", "end")
             self.view.output_texts[i].insert("0.0", str(self.generated_output))
+        else:
+            raise Exception("You need to provide input and expected output")
+
+    def run_all_testcases(self):
+        for i in range(int(self.view.number_of_tests)):
+            self.create_testcase(i)
+            self.result = self.result + self.generated_output + '\n'
+
+        self.open_preview_window()
+
+    def open_preview_window(self):
+        if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():
+            self.view.toplevel_window = ctk.CTkToplevel(self.view)  # create window if its None or destroyed
+            self.view.toplevel_window.rowconfigure(0, weight=1)
+            self.view.toplevel_window.columnconfigure(0, weight=1)
+            self.view.toplevel_window.title("output file preview")
+            self.view.toplevel_window.geometry("310x370")
+            self.view.output_preview = ctk.CTkTextbox(self.view.toplevel_window)
+            self.view.output_preview.grid(row=0, column=0, sticky="nesw")
+
+            self.view.output_preview.delete("0.0", "end")
+            self.view.output_preview.insert("0.0", self.result)
+        else:
+            self.view.toplevel_window.focus()
 
     def update_code(self, i):
         self.view.file_name.configure(text=self.singleton.get_filename())

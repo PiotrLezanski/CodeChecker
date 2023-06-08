@@ -73,3 +73,6 @@ class Controller:
             self.view.output_preview.insert("0.0", self.cppobject.get_output())
         else:
             self.view.toplevel_window.focus()  # if window exists focus it
+
+    def update_code(self, i):
+        self.view.imported_file_name.configure(text=self.singleton.get_filename())
