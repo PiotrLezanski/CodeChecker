@@ -6,7 +6,7 @@ from Tools.FileSingleton import FileSingleton
 
 class CppObject:
     def __init__(self, id: int, input_filepath: str, input_text: str, exec_time):
-        self.compilation_logs = None
+        self.compilation_logs = ""
         self.execution_time = None
         self.leaks_logs = None
         self.output = None
@@ -39,7 +39,8 @@ class CppObject:
         if self.output is not None:
             output_file_name = self.input_filepath[self.input_filepath.rfind('/') + 1:self.input_filepath.rfind('.')] + ".out"
             try:
-                output_file = open(output_file_name, 'w+')
+                output_filepath = self.code_filepath[0:self.code_filepath.rfind('/')+1:]+ str(output_file_name)
+                output_file = open(output_filepath, 'w+')
                 output_file.write(self.output)
                 output_file.close()
                 return output_file

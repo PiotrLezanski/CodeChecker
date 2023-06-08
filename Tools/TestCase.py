@@ -9,10 +9,10 @@ class TestCase:
     __cpp_object: Optional[CppObject.CppObject] = None
     __expected_test_output: Optional[str] = None
 
-    def __init__(self, id: int, input_filepath: str, expected_test_output: str, test_time=__default_test_time):
+    def __init__(self, id: int, input_text: str, expected_test_output: str, test_time=__default_test_time):
         self.__expected_test_output = expected_test_output
         cpp_factory = CppFactory.CppFactory()
-        self.__cpp_object = cpp_factory.create_cpp_object(id, input_filepath, test_time)
+        self.__cpp_object = cpp_factory.create_cpp_object_from_text(id, input_text, test_time)
 
     def get_output(self):
         return self.__cpp_object.get_output()

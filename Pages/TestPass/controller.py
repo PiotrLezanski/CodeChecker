@@ -39,10 +39,10 @@ class Controller:
 
     def create_testcase(self, i):
         # self.testcases_list = [None] * int(self.view.number_of_tests)
-        test_case = TestCase(self.code_filepath, self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
+        test_case = TestCase(0, self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
         if test_case.get_compilation_logs() != "":
             # compilation unsuccessful
-            self.generated_output = "Compilation error:\n" + test_case.get_compilation_logs()
+            self.generated_output = "Compilation error:\n" + str(test_case.get_compilation_logs())
             self.view.run_test_buttons[i]._bg_color = "blue"
         else:
             # compilation successful, now compare outputs
