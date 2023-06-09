@@ -14,25 +14,18 @@ class Controller:
         self.input_file = None
         self.input_filepath = None
         self.code_filepath = None
-        self.code_text = None
         self.cppobject = None
         self.view = view
+        self.singleton = FileSingleton.get_instance()
 
     def open_source_file(self):
         self.code_filepath = filedialog.askopenfilename(title="Choose a source file", initialdir="/", filetypes=[("Cpp files", "*.cpp")])
         self.code_file_name = self.code_filepath[self.code_filepath.rfind('/')+1:]
         # get working path
         if self.code_filepath != "":
-            # change singleton path
-            FileSingleton.set_file(self.code_filepath, 0)
-
-            # get code to variable
-            source_file = open(self.code_filepath, 'r')
-            self.code_text = source_file.read()
-
             self.view.import_source_button._bg_color = "green" # change color when imported
             self.view.imported_file_name.configure(text=self.code_file_name)
-            source_file.close()
+            self.singleton.set_file(self.code_filepath)
 
     def open_input_file(self):
         self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", "*.txt"), (".in", "*.in")])
@@ -53,15 +46,18 @@ class Controller:
             f.write(self.input_text)
             f.close()
             # create CppObject
-            self.cppobject = factory.CppObjectFromFilepath(self.code_filepath, self.input_filepath)
+            self.cppobject = factory.create_cpp_object_from_filepath(0, self.input_filepath)
         else:
-            self.cppobject = factory.CppObjectFromString(self.code_filepath, self.input_text)
+            self.cppobject = factory.create_cpp_object_from_text(0, self.input_text)
 
         self.cppobject.compile_and_run()
         # if compilation was successful
         if self.cppobject.get_compilation_logs() == "":
             # if run button pushed, generate .out file and its preview
             self.view.generate_output_frame(self.cppobject)
+        else:
+            self.view.infile_preview.delete("0.0", tkinter.END)
+            self.view.infile_preview.insert("0.0", "Compilation error:\n" + self.cppobject.get_compilation_logs())
 
     def open_preview_window(self):
         if self.view.toplevel_window is None or not self.view.toplevel_window.winfo_exists():
@@ -77,3 +73,6 @@ class Controller:
             self.view.output_preview.insert("0.0", self.cppobject.get_output())
         else:
             self.view.toplevel_window.focus()  # if window exists focus it
+
+    def update_code(self, i):
+        self.view.imported_file_name.configure(text=self.singleton.get_filename())
