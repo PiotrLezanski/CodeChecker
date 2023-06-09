@@ -39,6 +39,7 @@ class Controller:
 
     def create_testcase(self, i):
         test_case = TestCase(self.singleton.get_default(), self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
+        self.generated_output = ""
         if test_case.get_compilation_logs() != "":
             # compilation unsuccessful
             self.generated_output = f"Test {i+1}: Compilation error:\n" + str(test_case.get_compilation_logs())
