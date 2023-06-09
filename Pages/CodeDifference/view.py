@@ -99,7 +99,6 @@ class View(ctk.CTkFrame):
             self.toplevel_window = ctk.CTkToplevel(self)
             self.toplevel_window.rowconfigure(0, weight=1)
             self.toplevel_window.columnconfigure(0, weight=1)
-            self.toplevel_window.columnconfigure(1, weight=1)
             self.toplevel_window.title("results preview")
             self.toplevel_window.geometry("810x600")
 
