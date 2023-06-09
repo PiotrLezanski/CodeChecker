@@ -34,7 +34,7 @@ class TestFileSingleton(unittest.TestCase):
         with self.assertRaises(WrongExtensionError):
             self.instance.set_file(invalid_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath(0), None)
+        self.assertEqual(self.instance.get_filepath(0), "")
         self.assertEqual(self.instance.get_file(0), None)
 
     def test_set_unexisting_file_path(self):
@@ -43,7 +43,7 @@ class TestFileSingleton(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             self.instance.set_file(unexisting_file_path, 0)
 
-        self.assertEqual(self.instance.get_filepath(0), None)
+        self.assertEqual(self.instance.get_filepath(0), "")
         self.assertEqual(self.instance.get_file(0), None)
 
     @patch('builtins.open', new_callable=MagicMock)
@@ -145,7 +145,7 @@ class TestFileSingleton(unittest.TestCase):
     def test_reading_from_unexisting_file(self, mock_open):
         file = self.instance.get_file_text()
 
-        self.assertEqual(file, None)
+        self.assertEqual(file, "")
 
     @patch('builtins.open', new_callable=MagicMock)
     def test_reseting_reading_line(self, mock_open):

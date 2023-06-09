@@ -32,12 +32,14 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
     def test_load_proper_source_path(self, mock_file_dialog):
         self.test_controller.load_source_file()
 
-        self.mock_view.file_name.configure.assert_called_once_with(text="test.cpp")
         self.assertEqual(self.mock_view.import_source_button._bg_color, "green")
         self.mock_singleton._FileSingleton__instance.set_file.assert_called_once_with("path/test.cpp")
+        self.mock_view.file_name.configure.assert_called_once_with(text="test.cpp")
 
     @patch('tkinter.filedialog.askopenfilename', return_value="")
     def test_load_source_file_when_empty_source_path_do_nothing(self, mock_file_dialog):
+        self.mock_singleton.get_file.return_value = "test.cpp"
+
         self.test_controller.load_source_file()
 
         self.mock_view.file_name.configure.assert_not_called()

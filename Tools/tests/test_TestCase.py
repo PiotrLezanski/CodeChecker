@@ -8,7 +8,7 @@ class Test_TestCase(unittest.TestCase):
         self.mock_cpp_object = MagicMock()
         self.mock_cpp_object.get_output.return_value = "Hello World"
         self.mock_cpp_factory = MagicMock()
-        self.mock_cpp_factory.create_cpp_object.return_value = self.mock_cpp_object
+        self.mock_cpp_factory.create_cpp_object_from_text.return_value = self.mock_cpp_object
 
         with patch('CppExecution.CppFactory.CppFactory', return_value=self.mock_cpp_factory):
             self.test_instance = TestCase.TestCase(1, "path/test.cpp", "Hello World")
