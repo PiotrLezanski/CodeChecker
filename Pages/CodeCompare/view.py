@@ -29,6 +29,8 @@ class View(ctk.CTkFrame):
         self.import_file_frame = None
         self.controller = Controller(self)
 
+        self.columnconfigure(0, weight=1)
+
         # input file container
         self.generate_file_container()
 
@@ -59,7 +61,7 @@ class View(ctk.CTkFrame):
         self.generate_first_file_name()
 
     def generate_first_file_name(self, singleton=FileSingleton.get_instance()):
-        info_about_file = "No file" if singleton.get_filepath(0) is None else str(singleton.get_filepath(0))
+        info_about_file = "No file" if singleton.get_filepath(0) == "" else str(singleton.get_filepath(0))
         self.first_file_name = ctk.CTkLabel(self.import_file_frame, text=info_about_file)
         self.first_file_name.grid(row=0, column=2, padx=10, pady=10)
 
@@ -74,7 +76,7 @@ class View(ctk.CTkFrame):
         self.generate_second_file_name()
 
     def generate_second_file_name(self, singleton=FileSingleton.get_instance()):
-        info_about_file = "No file" if singleton.get_filepath(1) is None else str(singleton.get_filepath(1))
+        info_about_file = "No file" if singleton.get_filepath(1) == "" else str(singleton.get_filepath(1))
         self.second_file_name = ctk.CTkLabel(self.import_file_frame, text=info_about_file)
         self.second_file_name.grid(row=1, column=2, padx=10, pady=10)
 
@@ -93,6 +95,9 @@ class View(ctk.CTkFrame):
     def generate_testcase_container(self):
         self.infile_frame = ctk.CTkFrame(self)
         self.infile_frame.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
+        self.infile_frame.columnconfigure(0, weight=1)
+        self.infile_frame.columnconfigure(1, weight=1)
+
         self.infile_label = ctk.CTkLabel(self.infile_frame, text="Import file with input or modify textbox")
         self.infile_label.grid(row=1, column=0, padx=20, pady=10)
         self.infile_button = ctk.CTkButton(self.infile_frame, text="Choose file", fg_color="transparent",

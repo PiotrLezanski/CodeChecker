@@ -9,6 +9,8 @@ from Tools.EfficiencyChecker import EfficiencyChecker
 
 class Controller:
     def __init__(self, view):
+        self.second_path = None
+        self.first_path = None
         self.checker = [None, None]
         self.input_text = None
         self.input_file = None
@@ -27,6 +29,12 @@ class Controller:
                 self.view.import_second_source_button._bg_color = "green"
             components = path.split("/")
             file_name = components[len(components) - 1]
+
+            if file_number == 0:
+                self.first_path = path
+            else:
+                self.second_path = path;
+
             if file_number == 0:
                 self.view.first_file_name.configure(text=file_name)
                 self.singleton.set_file(path, 0)
@@ -47,14 +55,14 @@ class Controller:
             self.view.infile_preview.insert(tkinter.END, self.input_text)  # add content of file
 
     def run(self):
-        if self.singleton.get_file(0) is None and self.singleton.get_file(1) is None:
+        if self.singleton.get_file(0) is None or self.singleton.get_file(1) is None:
             return
 
         if self.input_text is None:
             return
 
-        self.checker[0] = EfficiencyChecker(self.path, 0)
-        self.checker[1] = EfficiencyChecker(self.path, 1)
+        self.checker[0] = EfficiencyChecker(0, self.singleton.get_filepath(0))
+        self.checker[1] = EfficiencyChecker(1, self.singleton.get_filepath(1))
 
         logs = ["", ""]
         logs[0] = self.checker[0].check_logs()

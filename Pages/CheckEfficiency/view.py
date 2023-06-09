@@ -26,6 +26,8 @@ class View(ctk.CTkFrame):
         self.import_file_frame = None
         self.controller = Controller(self)
 
+        self.columnconfigure(0, weight=1)
+
         # input file container
         self.generate_file_container()
 
@@ -45,14 +47,14 @@ class View(ctk.CTkFrame):
         self.import_source_label = ctk.CTkLabel(self.import_file_frame, text="Import source code")
         self.import_source_label.grid(row=0, column=0, padx=10, pady=10)
         self.import_source_button = ctk.CTkButton(self.import_file_frame, text="Choose file", fg_color="transparent",
-                                                  border_width=2, command=self.controller.load_source_file)
+                                                  border_width=2, command=lambda: self.controller.load_source_file())
         self.import_source_button.grid(row=0, column=1, padx=10, pady=10)
 
         self.generate_file_name()
 
     def generate_file_name(self, singleton=FileSingleton.get_instance()):
         # get file name
-        if singleton.get_filepath(0) is None and singleton.get_filepath(1) is None:
+        if singleton.get_filepath(0) == "" and singleton.get_filepath(1) == "":
             info_about_uploaded_files = "No file"
         elif singleton.get_filepath(0) is None:
             info_about_uploaded_files = str(singleton.get_filepath(1))
@@ -85,12 +87,15 @@ class View(ctk.CTkFrame):
         # frame for testcase
         self.infile_frame = ctk.CTkFrame(self)
         self.infile_frame.grid(row=1, column=0, padx=20, pady=10, sticky="ew")
+        self.infile_frame.columnconfigure(0, weight=1)
+        self.infile_frame.columnconfigure(1, weight=1)
+
         self.infile_label = ctk.CTkLabel(self.infile_frame, text="Import file with input or modify textbox")
         self.infile_label.grid(row=1, column=0, padx=20, pady=10)
         self.infile_button = ctk.CTkButton(self.infile_frame, text="Choose file", fg_color="transparent",
-                                           border_width=2, command=self.controller.open_testcase_file)
+                                           border_width=2, command=lambda: self.controller.open_testcase_file())
         self.infile_button.grid(row=1, column=1, padx=20, pady=10)
-        self.run_button = ctk.CTkButton(self.infile_frame, text="RUN", width=100, command=self.controller.run)
+        self.run_button = ctk.CTkButton(self.infile_frame, text="RUN", width=100, command=lambda: self.controller.run())
         self.run_button.grid(row=1, column=2, padx=10, pady=10)
         # input file preview
         self.infile_preview = ctk.CTkTextbox(self, height=200)
