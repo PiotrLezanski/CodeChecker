@@ -33,9 +33,3 @@ class CppFactory:
             return cpp_object
         else:
             raise WrongIdError("Wrong id given")
-
-    def exceededTime(self):
-        if self.object.get_execution_time() < self.max_exec_time:
-            return False
-        else:
-            return True
