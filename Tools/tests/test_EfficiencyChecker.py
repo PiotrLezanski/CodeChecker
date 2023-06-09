@@ -10,6 +10,9 @@ class test_Efficiency_Checker(unittest.TestCase):
         mocked_filepath = mock_open.return_value.open
         self.instance = EfficiencyChecker(_id, mocked_filepath)
 
+    def test_should_initialize_when_not_all_args_given(self):
+        self.assertIsInstance(self.instance, EfficiencyChecker)
+
     @patch("builtins.open", new_callable=MagicMock)
     def test_should_initialize_when_all_args_given(self, mock_open):
         _id = 0
@@ -17,14 +20,6 @@ class test_Efficiency_Checker(unittest.TestCase):
         max_time = 10_000
 
         expected_instance = EfficiencyChecker(_id, mocked_filepath, max_time)
-        self.assertIsInstance(expected_instance, EfficiencyChecker)
-
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_should_initialize_when_not_all_args_given(self, mock_open):
-        _id = 0
-        mocked_filepath = mock_open.return_value.open
-
-        expected_instance = EfficiencyChecker(_id, mocked_filepath)
         self.assertIsInstance(expected_instance, EfficiencyChecker)
 
     def test_should_initialize_when_not_existing_path(self):
