@@ -24,7 +24,7 @@ class View(ctk.CTkFrame):
         self.import_file_frame = None
         self.controller = Controller(self)
 
-        #self.rowconfigure(0, weight=1)
+        # self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
 
         # input filer container
@@ -107,6 +107,8 @@ class View(ctk.CTkFrame):
 
             self.output_preview.delete("0.0", tkinter.END)
             self.output_preview.insert(tkinter.END, text)
+
+            self.output_preview.configure(state="disabled")
 
         else:
             self.toplevel_window.focus()
