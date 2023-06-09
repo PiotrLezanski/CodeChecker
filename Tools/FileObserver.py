@@ -23,7 +23,6 @@ class FileObserver:
     def notify(self, i):
         for subscriber in self.__subscribers:
             try:
-                print(f"Eee {subscriber}, we zmień kod numer {i}")
                 subscriber.controller.update_code(i)
-            except Exception as e:
-                pass
+            except AttributeError as e:
+                print("Not implemented yet")
