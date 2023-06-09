@@ -43,7 +43,7 @@ class test_CppObject(unittest.TestCase):
         self.instance.code_filepath = "test.cpp"
         output = self.instance.compile()
 
-        self.assertNotEquals(output, "")
+        self.assertNotEqual(output, "")
         os.remove("test.cpp")
 
     def test_should_run_when_proper_code_given(self):
@@ -73,7 +73,6 @@ class test_CppObject(unittest.TestCase):
         self.instance.compile_and_run()
 
         mock_run.assert_not_called()
-        os.remove("test.cpp")
 
     def test_should_run_when_infinity_loop_given(self):
         with open("test.cpp", "w") as file:
