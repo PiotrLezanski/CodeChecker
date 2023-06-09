@@ -129,11 +129,13 @@ class View(ctk.CTkFrame):
             self.left_output_preview.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
             self.left_output_preview.delete("0.0", tkinter.END)
             self.left_output_preview.insert(tkinter.END, text[0])
+            self.left_output_preview.configure(state="disabled")
 
             self.right_output_preview = ctk.CTkTextbox(self.toplevel_window)
             self.right_output_preview.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
             self.right_output_preview.delete("0.0", tkinter.END)
             self.right_output_preview.insert(tkinter.END, text[1])
+            self.right_output_preview.configure(state="disabled")
         else:
             self.toplevel_window.focus()
                                            

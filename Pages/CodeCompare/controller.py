@@ -100,5 +100,7 @@ class Controller:
         self.view.generate_output_frame(text)
 
     def update_code(self, i):
-        self.view.first_file_name.configure(text=self.singleton.get_filename(0))
-        self.view.second_file_name.configure(text=self.singleton.get_filename(1))
+        if self.singleton.get_filename(0) != "":
+            self.view.first_file_name.configure(text=self.singleton.get_filename(0))
+        if self.singleton.get_filename(1) != "":
+            self.view.second_file_name.configure(text=self.singleton.get_filename(1))
