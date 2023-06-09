@@ -42,7 +42,14 @@ class CppObject:
             except Exception as e:
                 raise e
 
+    def exceededTime(self):
+        if self.get_execution_time() < self.max_execution_time:
+            return False
+        else:
+            return True
+
     def check_leaks(self):
+        self.compilation_logs = self.compile()
         # check for leaks only, if compilation was successful
         if self.compilation_logs == "":
             self.leaks_logs = self.run_leaks_test()
