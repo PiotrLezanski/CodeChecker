@@ -6,7 +6,7 @@ from Pages.GetOutput.view import View as GetOutputView
 from Pages.CheckEfficiency.view import View as EfficiencyView
 from Pages.CodeCompare.view import View as CompareView
 from Pages.TestPass.view import View as TestPassView
-
+from Pages.CodeDifference.view import View as CodeDifferenceView
 
 class View(ctk.CTk):
     def __init__(self):
@@ -33,7 +33,7 @@ class View(ctk.CTk):
             (2, "Get output", lambda: self.controller.button_on_click(2, GetOutputView)),
             (3, "Efficiency checker", lambda: self.controller.button_on_click(3, EfficiencyView)),
             (4, "Code compare", lambda: self.controller.button_on_click(4, CompareView)),
-            (5, "Code difference", lambda: self.controller.button_on_click(5, WelcomeView)),
+            (5, "Code difference", lambda: self.controller.button_on_click(5, CodeDifferenceView)),
             (6, "Test pass", lambda: self.controller.button_on_click(6, TestPassView)),
             (8, "Settings", lambda: self.controller.button_on_click(7, SettingsView))
         ]
