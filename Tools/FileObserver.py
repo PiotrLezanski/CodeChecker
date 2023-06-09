@@ -1,15 +1,12 @@
 class FileObserver:
     __instance = None
 
-    def __init__(self, subscribers=None):
+    def __init__(self):
         if FileObserver.__instance is not None:
             raise Exception("Direct initialization of singleton is not allowed. Use get_instance() instead.")
         else:
             FileObserver.__instance = self
-            if subscribers is None:
-                self.__subscribers = []
-            else:
-                self.__subscribers = subscribers
+            self.__subscribers = []
 
     @staticmethod
     def get_instance():
