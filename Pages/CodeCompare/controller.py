@@ -23,10 +23,6 @@ class Controller:
                                           filetypes=[("Cpp files", "*.cpp")])
         # get working path
         if path != "":
-            if file_number == 0:
-                self.view.import_first_source_button._bg_color = "green"
-            else:
-                self.view.import_second_source_button._bg_color = "green"
             components = path.split("/")
             file_name = components[len(components) - 1]
 
@@ -46,7 +42,6 @@ class Controller:
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
                                                filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
         if self.path != "":
-            self.view.infile_button._bg_color = "green"  # change color when imported
             components = self.path.split("/")
             input_file_name = components[len(components) - 1]
             self.input_file = open(self.path, 'r')
