@@ -24,6 +24,9 @@ class View(ctk.CTkFrame):
         self.import_file_frame = None
         self.controller = Controller(self)
 
+        #self.rowconfigure(0, weight=1)
+        self.columnconfigure(0, weight=1)
+
         # input filer container
         self.generate_file_container()
 
@@ -52,7 +55,7 @@ class View(ctk.CTkFrame):
         self.generate_first_file_name()
 
     def generate_first_file_name(self, singleton=FileSingleton.get_instance()):
-        info_about_file = "No file" if singleton.get_filepath(0) is "" else str(singleton.get_filepath(0))
+        info_about_file = "No file" if singleton.get_filepath(0) == "" else str(singleton.get_filepath(0))
         self.first_file_name = ctk.CTkLabel(self.import_file_frame, text=info_about_file)
         self.first_file_name.grid(row=0, column=2, padx=10, pady=10)
 
@@ -67,7 +70,7 @@ class View(ctk.CTkFrame):
         self.generate_second_file_name()
 
     def generate_second_file_name(self, singleton=FileSingleton.get_instance()):
-        info_about_file = "No file" if singleton.get_filepath(1) is "" else str(singleton.get_filepath(1))
+        info_about_file = "No file" if singleton.get_filepath(1) == "" else str(singleton.get_filepath(1))
         self.second_file_name = ctk.CTkLabel(self.import_file_frame, text=info_about_file)
         self.second_file_name.grid(row=1, column=2, padx=10, pady=10)
 
