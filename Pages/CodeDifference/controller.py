@@ -13,10 +13,6 @@ class Controller:
                                           filetypes=[("Cpp files", "*.cpp")])
         # get working path
         if path != "":
-            if file_number == 0:
-                self.view.import_first_source_button._bg_color = "green"
-            else:
-                self.view.import_second_source_button._bg_color = "green"
             components = path.split("/")
             file_name = components[len(components) - 1]
             if file_number == 0:
