@@ -56,8 +56,8 @@ class View(ctk.CTkFrame):
         self.output_texts = [None] * int(self.number_of_tests)
         self.run_test_buttons = [None] * int(self.number_of_tests)
 
-        self.testcases_frame = ctk.CTkScrollableFrame(self, width=600, height=450)
-        self.testcases_frame.grid(row=3, column=0)
+        self.testcases_frame = ctk.CTkScrollableFrame(self, width=600, height=415)
+        self.testcases_frame.grid(row=3, column=0, pady=10)
         for i in range(int(self.number_of_tests)):
             self.testcase_frames[i] = ctk.CTkFrame(self.testcases_frame, border_width=2)
             self.input_labels[i] = ctk.CTkLabel(self.testcase_frames[i], text="Input")
