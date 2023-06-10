@@ -17,7 +17,6 @@ class Controller:
     def open_source_file(self):
         self.code_filepath = filedialog.askopenfilename(title="Choose a source file", initialdir="/", filetypes=[("Cpp files", "*.cpp")])
         if self.code_filepath != "":
-            self.view.import_source_button._bg_color = "green"
             self.code_filename = self.code_filepath[self.code_filepath.rfind('/')+1:]
             self.view.file_name.configure(text=self.code_filename)
             self.singleton.set_file(self.code_filepath)
@@ -30,12 +29,12 @@ class Controller:
         if self.view.number_of_tests.isnumeric() == False or not 0 < int(self.view.number_of_tests) <= 10:
             messagebox.showerror("Error message", "Please enter valid number of testcases")
             self.view.number_of_tests = None
-
-        self.view.create_testcase_components()
-        curr_row = 3
-        for i in range(int(self.view.number_of_tests)):
-            self.view.generate_testcase_frame(i, curr_row)
-            curr_row = curr_row + 3
+        else:
+            self.view.create_testcase_components()
+            curr_row = 3
+            for i in range(int(self.view.number_of_tests)):
+                self.view.generate_testcase_frame(i, curr_row)
+                curr_row = curr_row + 3
 
     def create_testcase(self, i):
         test_case = TestCase(self.singleton.get_default(), self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))

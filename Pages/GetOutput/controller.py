@@ -23,18 +23,16 @@ class Controller:
         self.code_file_name = self.code_filepath[self.code_filepath.rfind('/')+1:]
         # get working path
         if self.code_filepath != "":
-            self.view.import_source_button._bg_color = "green" # change color when imported
             self.view.imported_file_name.configure(text=self.code_file_name)
             self.singleton.set_file(self.code_filepath)
 
     def open_input_file(self):
         self.input_filepath = filedialog.askopenfilename(title="Choose a input file", initialdir="/", filetypes=[(".txt", "*.txt"), (".in", "*.in")])
-        if self.input_filepath is not None:
+        if self.input_filepath != "":
             # get input to variable
             self.input_file = open(self.input_filepath, 'r')
             self.input_text = self.input_file.read()
 
-            self.view.infile_button._bg_color = "green" # change color when imported
             self.view.infile_preview.delete("0.0", tkinter.END) # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 

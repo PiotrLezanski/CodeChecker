@@ -33,7 +33,6 @@ class View(ctk.CTkFrame):
         if self.singleton.get_filepath() is None:
             text = "No file uploaded"
         else:
-            self.import_source_button._bg_color = "green"
             text = self.singleton.get_filepath()[self.singleton.get_filepath(0).rfind('/'):]
         self.imported_file_name = ctk.CTkLabel(self.code_frame, text=text)
         self.imported_file_name.grid(row=1, column=3)
