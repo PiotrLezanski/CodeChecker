@@ -1,10 +1,10 @@
 import tkinter
 from tkinter import filedialog
+import Tools
 
 import customtkinter as ctk
 from Tools.FileSingleton import FileSingleton
 
-from Tools.EfficiencyChecker import EfficiencyChecker
 
 
 class Controller:
@@ -57,8 +57,8 @@ class Controller:
         if self.input_text == "" or self.input_text == "\n":
             return
 
-        self.checker[0] = EfficiencyChecker(0, self.input_text)
-        self.checker[1] = EfficiencyChecker(1, self.input_text)
+        self.checker[0] = Tools.EfficiencyChecker.EfficiencyChecker(0, self.input_text)
+        self.checker[1] = Tools.EfficiencyChecker.EfficiencyChecker(1, self.input_text)
 
         logs = ["", ""]
         logs[0] = self.checker[0].check_logs()
@@ -96,7 +96,14 @@ class Controller:
         self.view.generate_output_frame(text)
 
     def update_code(self, i):
-        if self.singleton.get_filename(0) != "":
-            self.view.first_file_name.configure(text=self.singleton.get_filename(0))
-        if self.singleton.get_filename(1) != "":
-            self.view.second_file_name.configure(text=self.singleton.get_filename(1))
+        name = self.singleton.get_filename(0)
+        if name != "":
+            self.view.first_file_name.configure(text=name)
+        else:
+            self.view.first_file_name.configure(text="No file")
+
+        name = self.singleton.get_filename(1)
+        if name != "":
+            self.view.second_file_name.configure(text=name)
+        else:
+            self.view.second_file_name.configure(text="No file")

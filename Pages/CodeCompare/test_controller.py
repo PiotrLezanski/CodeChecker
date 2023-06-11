@@ -23,7 +23,7 @@ class Test_Code_Compare_Controller(unittest.TestCase):
         self.mock_view.infile_label = MagicMock()
         self.mock_view.infile_frame = MagicMock()
         self.mock_view.checkbox = MagicMock()
-        self.mock_view.checkbox_vars = MagicMock()
+        self.mock_view.checkbox_vars = [MagicMock(), MagicMock(), MagicMock()]
         self.mock_view.second_file_name = MagicMock()
         self.mock_view.import_second_source_button = MagicMock()
         self.mock_view.import_second_source_label = MagicMock()
@@ -31,6 +31,7 @@ class Test_Code_Compare_Controller(unittest.TestCase):
         self.mock_view.import_first_source_button = MagicMock()
         self.mock_view.import_first_source_label = MagicMock()
         self.mock_view.import_file_frame = MagicMock()
+        self.mock_view.generate_output_frame = MagicMock()
 
         self.controller = controller.Controller(self.mock_view)
 
@@ -39,7 +40,6 @@ class Test_Code_Compare_Controller(unittest.TestCase):
     def test_load_source_file_load_first_file(self, mock_file_dialog, mock_open):
         self.controller.load_source_file(0)
 
-        #self.assertEqual(self.mock_view.import_first_source_button._bg_color, "green")
         self.assertEqual(self.controller.first_path, "path/test.cpp")
         self.mock_view.first_file_name.configure.assert_called_once_with(text="test.cpp")
         self.mock_singleton._FileSingleton__instance.set_file.assert_called_once_with("path/test.cpp", 0)
@@ -61,7 +61,6 @@ class Test_Code_Compare_Controller(unittest.TestCase):
     def test_load_source_file_load_second_file(self, mock_file_dialog, mock_open):
             self.controller.load_source_file(1)
 
-            #self.assertEqual(self.mock_view.import_second_source_button._bg_color, "green")
             self.assertEqual(self.controller.second_path, "path/test.cpp")
             self.mock_view.second_file_name.configure.assert_called_once_with(text="test.cpp")
             self.mock_singleton._FileSingleton__instance.set_file.assert_called_once_with("path/test.cpp", 1)
@@ -88,7 +87,6 @@ class Test_Code_Compare_Controller(unittest.TestCase):
         self.controller.open_testcase_file()
 
         self.assertEqual(self.controller.path, "path/test.txt")
-        #self.assertEqual(self.mock_view.infile_button._bg_color, "green")
         self.assertEqual(self.controller.input_text, "test"
                                                           ""
                                                           ""
@@ -129,12 +127,67 @@ class Test_Code_Compare_Controller(unittest.TestCase):
         self.mock_singleton._FileSingleton__instance.get_filepath.return_value = "test.cpp"
         self.controller.input_text = "test"
 
-        mock_efficiency_checker.check_logs.return_value = "error"
+        mock_efficiency_checker.return_value.check_logs.return_value = "error"
 
         self.controller.run()
 
-        self.mock_view.generate_output_frane.assert_called_once()
+        self.mock_view.generate_output_frame.assert_called_once()
 
+    @patch('builtins.open', new_callable=MagicMock)
+    @patch('Tools.EfficiencyChecker.EfficiencyChecker', new_callable=MagicMock)
+    def test_run_when_compilation_check_logs(self, mock_efficiency_checker, mock_open):
+        self.mock_singleton._FileSingleton__instance.get_file.return_value = "file"
+        self.mock_singleton._FileSingleton__instance.get_filepath.return_value = "test.cpp"
+        self.controller.input_text = "test"
+
+        mock_efficiency_checker.return_value.check_logs.return_value = "Compilation successful"
+
+        self.mock_view.checkbox_vars[0].get.return_value = 0
+        self.mock_view.checkbox_vars[1].get.return_value = 0
+        self.mock_view.checkbox_vars[2].get.return_value = 1
+
+        self.controller.run()
+
+        self.mock_view.generate_output_frame.assert_called_once_with(
+            ["Logs: Compilation successful\n\nTime: Not checked\n\nLeaks: Not checked\n\n", "Logs: Compilation successful\n\nTime: Not checked\n\nLeaks: Not checked\n\n"])
+
+    @patch('builtins.open', new_callable=MagicMock)
+    @patch('Tools.EfficiencyChecker.EfficiencyChecker', new_callable=MagicMock)
+    def test_run_when_time_check_time(self, mock_efficiency_checker, mock_open):
+        self.mock_singleton._FileSingleton__instance.get_file.return_value = "file"
+        self.mock_singleton._FileSingleton__instance.get_filepath.return_value = "test.cpp"
+        self.controller.input_text = "test"
+
+        mock_efficiency_checker.return_value.check_logs.return_value = "Compilation successful"
+        mock_efficiency_checker.return_value.check_time.side_effect = ["Time: 0.000000", "Time: 1.000000"]
+        self.mock_view.checkbox_vars[0].get.return_value = 1
+        self.mock_view.checkbox_vars[1].get.return_value = 0
+        self.mock_view.checkbox_vars[2].get.return_value = 0
+
+        self.controller.run()
+
+        self.mock_view.generate_output_frame.assert_called_once_with(
+            ["Logs: Not checked\n\nTime: Time: 0.000000\n\nLeaks: Not checked\n\n",
+             "Logs: Not checked\n\nTime: Time: 1.000000\n\nLeaks: Not checked\n\n"])
+
+    @patch('builtins.open', new_callable=MagicMock)
+    @patch('Tools.EfficiencyChecker.EfficiencyChecker', new_callable=MagicMock)
+    def test_run_when_leaks_check_leaks(self, mock_efficiency_checker, mock_open):
+        self.mock_singleton._FileSingleton__instance.get_file.return_value = "file"
+        self.mock_singleton._FileSingleton__instance.get_filepath.return_value = "test.cpp"
+        self.controller.input_text = "test"
+
+        mock_efficiency_checker.return_value.check_logs.return_value = "Compilation successful"
+        mock_efficiency_checker.return_value.check_leaks.side_effect = ["Leaks: 0", "Leaks: 1"]
+        self.mock_view.checkbox_vars[0].get.return_value = 0
+        self.mock_view.checkbox_vars[1].get.return_value = 1
+        self.mock_view.checkbox_vars[2].get.return_value = 0
+
+        self.controller.run()
+
+        self.mock_view.generate_output_frame.assert_called_once_with(
+            ["Logs: Not checked\n\nTime: Not checked\n\nLeaks: Leaks: 0\n\n",
+             "Logs: Not checked\n\nTime: Not checked\n\nLeaks: Leaks: 1\n\n"])
 
     def test_update_code_changes_text_when_changed_file(self):
         self.mock_singleton._FileSingleton__instance.get_filename.side_effect = ["test.cpp", "test2.cpp"]

@@ -5,8 +5,6 @@ from Tools import FileSingleton
 from Tools.Exceptions import WrongExtensionError
 
 
-# if they'll tell me that we cant have two the same files open, I will test it
-
 class TestFileSingleton(unittest.TestCase):
     def setUp(self):
         self.instance = FileSingleton.FileSingleton.get_instance()

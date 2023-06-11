@@ -5,12 +5,10 @@ from Tools.FileSingleton import FileSingleton
 
 class CppFactory:
     default_max_exec_time = 15_000
-    def __init__(self, max_exec_time=default_max_exec_time):
-        self.max_exec_time = max_exec_time
+    def __init__(self):
         self.singleton = FileSingleton.get_instance()
 
     def create_cpp_object_from_filepath(self, id: int, input_filepath: str, max_exec_time=default_max_exec_time):
-        self.max_exec_time = max_exec_time
         if id == 0 or id == 1:
             input_file = open(input_filepath, 'r')
             input_text = input_file.read()

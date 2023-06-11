@@ -165,14 +165,5 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
 
         self.mock_view.file_name.configure.assert_called_once_with(text="No file")
 
-    @unittest.skip("Dont know if needed")
-    def test_run_without_input_text_do_nothing(self):
-        self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
-        self.test_controller.input_text = None
-
-        self.test_controller.run()
-
-        self.mock_view.infile_preview.delete.assert_not_called()
-        self.mock_view.infile_preview.insert.assert_not_called()
 
 
