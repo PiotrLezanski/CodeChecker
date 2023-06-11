@@ -4,9 +4,6 @@ from CppExecution import CppObject
 
 
 class EfficiencyChecker:
-    def __init__(self, _id, input_path, max_exec_time=15_000):
-        self.cpp_factory = CppFactory.CppFactory()
-        self.cpp_object = self.cpp_factory.create_cpp_object_from_filepath(_id, input_path, max_exec_time)
 
     def __init__(self, _id, input_text, max_exec_time=15_000):
         self.cpp_factory = CppFactory.CppFactory()
