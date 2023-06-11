@@ -3,7 +3,8 @@ from tkinter import filedialog
 import customtkinter as ctk
 
 from Tools.FileSingleton import FileSingleton
-
+from Tools.PopUpWindow import generate_popup_window
+from Tools.EfficiencyChecker import EfficiencyChecker
 import Tools
 
 
@@ -37,9 +38,11 @@ class Controller:
     def run(self):
         # no default file uploaded
         if self.__instance.get_file() is None:
+            generate_popup_window("No file attached", self.view)
             return
 
         if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[2].get() == 0:
+            generate_popup_window("Choose at least 1 checkbox", self.view)
             return
 
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END)

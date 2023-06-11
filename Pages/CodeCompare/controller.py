@@ -1,10 +1,11 @@
 import tkinter
 from tkinter import filedialog
-import Tools
 
-import customtkinter as ctk
 from Tools.FileSingleton import FileSingleton
+from Tools.PopUpWindow import generate_popup_window
+from Tools.EfficiencyChecker import EfficiencyChecker
 
+import Tools
 
 
 class Controller:
@@ -50,12 +51,15 @@ class Controller:
 
     def run(self):
         if self.singleton.get_file(0) is None or self.singleton.get_file(1) is None:
+            generate_popup_window("No files attached", self.view)
+            return
+
+        if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[
+            2].get() == 0:
+            generate_popup_window("Choose at least 1 checkbox", self.view)
             return
 
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END)
-
-        if self.input_text == "" or self.input_text == "\n":
-            return
 
         self.checker[0] = Tools.EfficiencyChecker.EfficiencyChecker(0, self.input_text)
         self.checker[1] = Tools.EfficiencyChecker.EfficiencyChecker(1, self.input_text)
