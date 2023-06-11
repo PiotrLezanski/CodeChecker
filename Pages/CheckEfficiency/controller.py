@@ -5,6 +5,7 @@ import customtkinter as ctk
 
 from Tools.FileSingleton import FileSingleton
 
+
 class Controller:
     def __init__(self, view):
         self.path = None
@@ -20,18 +21,16 @@ class Controller:
         # get working path
         if path != "":
             # self.view.import_source_button._bg_color = "green"  # change color when imported
-            self.view.file_name.configure(text=self.__instance.get_filename())
-
             self.__instance.set_file(path)
+            self.view.file_name.configure(text=self.__instance.get_filename())
 
     def open_testcase_file(self):
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
                                                filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
         if self.path != "":
-            components = self.path.split("/")
-            input_file_name = components[len(components) - 1]
             self.input_file = open(self.path, 'r')
             self.input_text = self.input_file.read()
+            self.input_file.close()
             self.view.infile_preview.delete("0.0", tkinter.END)  # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text)  # add content of file
 
@@ -40,11 +39,13 @@ class Controller:
         if self.__instance.get_file() is None:
             return
 
+        self.input_text = self.view.infile_preview.get("1.0", tkinter.END)
+
         # no testcase
-        if self.input_text is None:
+        if self.input_text == "" or self.input_text == "\n":
             return
 
-        self.checker = EfficiencyChecker(self.__instance.get_default(), self.path)
+        self.checker = EfficiencyChecker(self.__instance.get_default(), self.input_text)
 
         logs = self.checker.check_logs()
         if logs == "Compilation successful":

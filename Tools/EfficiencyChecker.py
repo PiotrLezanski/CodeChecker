@@ -8,6 +8,10 @@ class EfficiencyChecker:
         self.cpp_factory = CppFactory.CppFactory()
         self.cpp_object = self.cpp_factory.create_cpp_object_from_filepath(_id, input_path, max_exec_time)
 
+    def __init__(self, _id, input_text, max_exec_time=15_000):
+        self.cpp_factory = CppFactory.CppFactory()
+        self.cpp_object = self.cpp_factory.create_cpp_object_from_text(_id, input_text, max_exec_time)
+
     def check_time(self):
         if not self.cpp_object.exceededTime():
             return str(self.cpp_object.get_execution_time()) + " ms"
