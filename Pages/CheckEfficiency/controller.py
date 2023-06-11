@@ -45,6 +45,9 @@ class Controller:
         if self.input_text == "" or self.input_text == "\n":
             return
 
+        if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[2].get() == 0:
+            return
+
         self.checker = EfficiencyChecker(self.__instance.get_default(), self.input_text)
 
         logs = self.checker.check_logs()
@@ -59,4 +62,8 @@ class Controller:
         self.view.generate_output_frame(text)
 
     def update_code(self, i):
-        self.view.file_name.configure(text=self.__instance.get_filename())
+        name = self.__instance.get_filename()
+        if name != "":
+            self.view.file_name.configure(text=self.__instance.get_filename())
+        else:
+            self.view.file_name.configure(text="No file")
