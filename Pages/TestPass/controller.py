@@ -37,24 +37,29 @@ class Controller:
                 curr_row = curr_row + 3
 
     def create_testcase(self, i):
-        test_case = TestCase(self.singleton.get_default(), self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
-        self.generated_output = ""
-        if test_case.get_compilation_logs() != "":
-            # compilation unsuccessful
-            self.generated_output = f"Test {i+1}: Compilation error:\n" + str(test_case.get_compilation_logs())
-            self.view.run_test_buttons[i]._bg_color = "blue"
-        else:
-            # compilation successful, now compare outputs
-            if test_case.compare_output():
-                self.generated_output = f"Test {i+1}: PASSED"
-                self.view.run_test_buttons[i]._bg_color = "green"
+        if self.view.input_texts[i] != "" and self.view.output_texts[i] != "" and self.singleton.get_filepath() != "":
+            test_case = TestCase(self.singleton.get_default(), self.view.input_texts[i].get("0.0", "end"), self.view.output_texts[i].get("0.0", "end"))
+            self.generated_output = ""
+            if test_case.get_compilation_logs() != "":
+                # compilation unsuccessful
+                self.generated_output = f"Test {i+1}: Compilation error:\n" + str(test_case.get_compilation_logs())
+                self.view.run_test_buttons[i]._bg_color = "blue"
             else:
-                tmp = self.view.output_texts[i].get("0.0", "end")
-                self.generated_output = f"\nTest {i+1}: NOT PASSED\nYour output:\n{tmp}\nExpected output:\n{test_case.get_output()}"
-                self.view.run_test_buttons[i]._bg_color = "red"
+                # compilation successful, now compare outputs
+                if test_case.compare_output():
+                    self.generated_output = f"Test {i+1}: PASSED"
+                    self.view.run_test_buttons[i]._bg_color = "green"
+                else:
+                    tmp = self.view.output_texts[i].get("0.0", "end")
+                    self.generated_output = f"\nTest {i+1}: NOT PASSED\nYour output:\n{tmp}\nExpected output:\n{test_case.get_output()}"
+                    self.view.run_test_buttons[i]._bg_color = "red"
+            return True
+        else:
+            messagebox.showerror("Error message", "You need to provide input, expected output and .cpp file")
+            return False
 
     def run_testcase(self, i):
-        if self.view.input_texts[i] is not None and self.view.output_texts[i] is not None and self.singleton.get_filepath() != "":
+        if self.view.input_texts[i] != "" and self.view.output_texts[i] != "" and self.singleton.get_filepath() != "":
             self.create_testcase(i)
             self.view.output_texts[i].delete("0.0", "end")
             self.view.output_texts[i].insert("0.0", str(self.generated_output))
@@ -64,8 +69,10 @@ class Controller:
     def run_all_testcases(self):
         result = ""
         for i in range(int(self.view.number_of_tests)):
-            self.create_testcase(i)
-            result = result + self.generated_output + '\n'
+            if self.create_testcase(i):
+                result = result + self.generated_output + '\n'
+            else:
+                return
 
         self.open_preview_window(result)
 
