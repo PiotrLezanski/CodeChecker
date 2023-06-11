@@ -1,6 +1,15 @@
 import customtkinter as ctk
 from Pages.WelcomeWindow.controller import Controller
 
+MAIN_TEXT = """
+Welcome to CodeChecker!
+Currently supported programming languages: C++
+
+Upload your code below and set the default one for tests. Add another code to compare those two.
+To change the theme and interface size, please use Settings 
+To change page to desired functionality, please use the sidebar placed on the left and upload required files.
+"""
+
 
 class View(ctk.CTkFrame):
     def __init__(self, parent):
@@ -8,6 +17,7 @@ class View(ctk.CTkFrame):
         self.controller = Controller(self)
         self.checkboxes = []
         self.text_boxes = []
+        self.labels = []
 
         self.content = ctk.CTkFrame(self)
         self.content.pack(fill="x", padx=20, pady=20)
@@ -18,8 +28,7 @@ class View(ctk.CTkFrame):
 
     def generate_message(self):
         text_box = ctk.CTkTextbox(self.content, wrap="word")
-        text_box.insert("0.0",
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent porttitor egestas nunc ut efficitur. Morbi iaculis, urna in pretium convallis, ante quam efficitur nibh, eu volutpat leo erat nec mi. Curabitur convallis turpis mauris, nec rutrum dolor consequat quis. Suspendisse potenti. Nam auctor ultricies velit in sollicitudin. Praesent congue, libero.")
+        text_box.insert("0.0", MAIN_TEXT)
         text_box.configure(state="disabled")
         text_box.pack(fill="both", expand=1)
 
@@ -38,6 +47,7 @@ class View(ctk.CTkFrame):
         checkbox.grid(row=0, column=column_number, padx=5, pady=5)
 
         label = ctk.CTkLabel(grid, text="")
+        self.labels.append(label)
         label.grid(row=1, column=column_number, columnspan=2, sticky="nsew", padx=2, pady=2)
 
         file_button = ctk.CTkButton(grid, text="Choose file", fg_color="transparent", border_width=2,

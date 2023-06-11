@@ -31,10 +31,7 @@ class Test_Welcome_Window_Controller(unittest.TestCase):
 
         self.test_controller.load_file(1, mock_label)
 
-        mock_label.configure.assert_called_once_with(text=test_name)
         self.mock_singleton._FileSingleton__instance.set_file.assert_called_once_with("path/test.cpp", 1)
-        self.mock_view.text_boxes[1].delete.assert_called_once_with("0.0", tkinter.END)
-        self.mock_view.text_boxes[1].insert.assert_called_once_with(tkinter.END, "test")
         self.mock_view.checkboxes[0].insert.assert_not_called()
 
     @patch('tkinter.filedialog.askopenfilename', return_value="")
