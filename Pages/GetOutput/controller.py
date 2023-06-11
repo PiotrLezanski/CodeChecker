@@ -12,7 +12,7 @@ class Controller:
         self.input_file_name = None
         self.input_text = None
         self.input_file = None
-        self.input_filepath = None
+        self.input_filepath = ""
         self.code_filepath = None
         self.cppobject = None
         self.view = view
@@ -39,7 +39,7 @@ class Controller:
     def run_code(self):
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
         factory = CppFactory()
-        if self.input_filepath is not None:
+        if self.input_filepath != "":
             f = open(self.input_filepath, 'w')
             f.write(self.input_text)
             f.close()
