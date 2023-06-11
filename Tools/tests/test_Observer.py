@@ -9,7 +9,7 @@ class Test_Observer(unittest.TestCase):
         self.instance = FileObserver.FileObserver.get_instance()
 
     def tearDown(self):
-        self.instance.__subscribers = []
+        self.instance._FileObserver__subscribers = []
 
     def test_call_get_instance_twice(self):
         instance2 = FileObserver.FileObserver.get_instance()
@@ -20,11 +20,11 @@ class Test_Observer(unittest.TestCase):
             FileObserver.FileObserver()
 
     def test_subscribes_are_empty(self):
-        self.assertEqual(self.instance.__subscribers, [])
+        self.assertEqual(self.instance._FileObserver__subscribers, [])
 
     def test_add_subscriber(self):
         self.instance.add_subscriber("test")
-        self.assertEqual(self.instance.__subscribers, ["test"])
+        self.assertEqual(self.instance._FileObserver__subscribers, ["test"])
 
     @patch('builtins.print', new_callable=MagicMock)
     def test_notify_when_sub_not_implemented_update_code(self, mock_print):

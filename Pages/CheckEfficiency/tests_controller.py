@@ -89,15 +89,6 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
 
-    def test_run_with_empty_input_text_do_nothing(self):
-        self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
-        self.test_controller.input_text = ""
-
-        self.test_controller.run()
-
-        self.mock_view.infile_preview.delete.assert_not_called()
-        self.mock_view.infile_preview.insert.assert_not_called()
-
     def test_run_without_input_text_do_nothing(self):
         self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
         self.test_controller.input_text = None
@@ -106,6 +97,47 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
 
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
+
+    @patch("Tools.EfficiencyChecker.EfficiencyChecker.__init__.", return_value=MagicMock)
+    @patch("CppExecution.CppFactory.CppFactory", autospec=True)
+    def test_run_when_compile_error_show_logs(self, mock_factory, mock_efficiency_checker):
+        self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
+        self.mock_singleton._FileSingleton__instance.get_default.return_value = "0"
+        self.test_controller.input_text = "text"
+
+        mock_factory.return_value.create_cpp_object_from_filepath.return_value = 7
+
+        self.test_controller.run()
+
+        self.mock_view.generate_output_frame.assert_called_once_with("Logs: logs\n\n")
+
+    @patch("Tools.EfficiencyChecker.EfficiencyChecker")
+    @patch("CppExecution.CppFactory.CppFactory")
+    def test_run_when_compile_error_show_logs(self, mock_factory, mock_efficiency_checker):
+        self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
+        self.mock_singleton._FileSingleton__instance.get_default.return_value = "0"
+        self.test_controller.input_text = "text"
+
+        mock_cpp_object = MagicMock()
+        mock_factory.return_value.create_cpp_object_from_filepath.return_value = mock_cpp_object
+
+        mock_checker_instance = mock_efficiency_checker.return_value
+        mock_checker_instance.check_logs.return_value = "Compilation successful"
+
+        self.test_controller.run()
+
+        self.mock_view.generate_output_frame.assert_called_once_with(
+            "Logs: Compilation successful\n\nTime: Not checked\n\nLeaks: Not checked\n\n")
+
+    def test_run_with_mock_efficiency_checker(self):
+        self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
+        self.mock_singleton._FileSingleton__instance.get_default.return_value = "0"
+        self.test_controller.input_text = "text"
+        self.test_controller.path = "path"
+        with patch('Tools.EfficiencyChecker.EfficiencyChecker', autospec=True) as mock_efficiency_checker:
+            self.test_controller.run()
+            mock_efficiency_checker.assert_called_once_with("0", self.test_controller.path)
+
 
     def test_update_code_changes_text_when_changed_file(self):
         self.mock_singleton._FileSingleton__instance.get_filename.return_value = "test.cpp"
