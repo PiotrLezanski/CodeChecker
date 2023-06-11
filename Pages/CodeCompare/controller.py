@@ -42,10 +42,9 @@ class Controller:
         self.path = filedialog.askopenfilename(title="Choose a input file", initialdir="/",
                                                filetypes=[("Text files", "*.txt"), ("In files", "*.in")])
         if self.path != "":
-            components = self.path.split("/")
-            input_file_name = components[len(components) - 1]
             self.input_file = open(self.path, 'r')
             self.input_text = self.input_file.read()
+            self.input_file.close()
             self.view.infile_preview.delete("0.0", tkinter.END)  # clear textbox
             self.view.infile_preview.insert(tkinter.END, self.input_text)  # add content of file
 
@@ -53,11 +52,13 @@ class Controller:
         if self.singleton.get_file(0) is None or self.singleton.get_file(1) is None:
             return
 
-        if self.input_text is None:
+        self.input_text = self.view.infile_preview.get("1.0", tkinter.END)
+
+        if self.input_text == "" or self.input_text == "\n":
             return
 
-        self.checker[0] = EfficiencyChecker(0, self.singleton.get_filepath(0))
-        self.checker[1] = EfficiencyChecker(1, self.singleton.get_filepath(1))
+        self.checker[0] = EfficiencyChecker(0, self.input_text)
+        self.checker[1] = EfficiencyChecker(1, self.input_text)
 
         logs = ["", ""]
         logs[0] = self.checker[0].check_logs()
