@@ -1,9 +1,10 @@
 import tkinter
 from tkinter import filedialog
-from Tools.EfficiencyChecker import EfficiencyChecker
 import customtkinter as ctk
 
 from Tools.FileSingleton import FileSingleton
+
+import Tools
 
 
 class Controller:
@@ -20,7 +21,6 @@ class Controller:
                                           filetypes=[("Cpp files", "*.cpp")])
         # get working path
         if path != "":
-            # self.view.import_source_button._bg_color = "green"  # change color when imported
             self.__instance.set_file(path)
             self.view.file_name.configure(text=self.__instance.get_filename())
 
@@ -35,20 +35,16 @@ class Controller:
             self.view.infile_preview.insert(tkinter.END, self.input_text)  # add content of file
 
     def run(self):
-        # no files uploaded
+        # no default file uploaded
         if self.__instance.get_file() is None:
-            return
-
-        self.input_text = self.view.infile_preview.get("1.0", tkinter.END)
-
-        # no testcase
-        if self.input_text == "" or self.input_text == "\n":
             return
 
         if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[2].get() == 0:
             return
 
-        self.checker = EfficiencyChecker(self.__instance.get_default(), self.input_text)
+        self.input_text = self.view.infile_preview.get("1.0", tkinter.END)
+
+        self.checker = Tools.EfficiencyChecker.EfficiencyChecker(self.__instance.get_default(), self.input_text)
 
         logs = self.checker.check_logs()
         if logs == "Compilation successful":
