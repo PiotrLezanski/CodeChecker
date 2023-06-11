@@ -17,6 +17,9 @@ class FileSingleton(object):
             self.__default = 0
             self.observer = FileObserver.get_instance()
 
+    def __del__(self):
+        self.reset()
+
     @staticmethod
     def get_instance():
         if FileSingleton.__instance is None:
