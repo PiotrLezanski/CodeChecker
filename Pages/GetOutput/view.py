@@ -21,6 +21,7 @@ class View(ctk.CTkFrame):
 
         self.code_frame.columnconfigure(0, weight=1)
         self.code_frame.columnconfigure(1, weight=1)
+        self.code_frame.columnconfigure(2, weight=1)
 
         self.language_picker_label = ctk.CTkLabel(self.code_frame, text="Pick programming language")
         self.language_picker_label.grid(row=0, column=0, padx=10, pady=10, sticky="nw")
@@ -37,7 +38,7 @@ class View(ctk.CTkFrame):
         if self.singleton.get_filepath() is None:
             text = "No file uploaded"
         else:
-            text = self.singleton.get_filepath()[self.singleton.get_filepath(0).rfind('/'):]
+            text = self.singleton.get_filepath()[self.singleton.get_filepath().rfind('/'):]
         self.imported_file_name = ctk.CTkLabel(self.code_frame, text=text)
         self.imported_file_name.grid(row=1, column=2)
 

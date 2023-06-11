@@ -1,6 +1,7 @@
 import tkinter.ttk
 import customtkinter as ctk
 from Pages.TestPass.controller import Controller
+from Tools.FileSingleton import FileSingleton
 
 class View(ctk.CTkFrame):
     def __init__(self, parent):
@@ -18,6 +19,7 @@ class View(ctk.CTkFrame):
         self.testcase_frames = None
         self.number_of_tests = None
         self.toplevel_window = None
+        self.singleton = FileSingleton.get_instance()
         self.controller = Controller(self)
 
         self.import_file_frame = ctk.CTkFrame(self)
@@ -34,7 +36,12 @@ class View(ctk.CTkFrame):
         self.import_source_button.grid(row=0, column=1, padx=10, pady=10)
 
         # display file name
-        self.file_name = ctk.CTkLabel(self.import_file_frame, text="No file")
+        if self.singleton.get_filepath() is None:
+            text = "No file uploaded"
+        else:
+            text = self.singleton.get_filepath()[self.singleton.get_filepath().rfind('/'):]
+
+        self.file_name = ctk.CTkLabel(self.import_file_frame, text=text)
         self.file_name.grid(row=0, column=2, padx=10, pady=10)
 
         # number of tests
