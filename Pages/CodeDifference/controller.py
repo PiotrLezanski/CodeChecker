@@ -1,6 +1,7 @@
+import sys
 from tkinter import filedialog
 from Tools.FileSingleton import FileSingleton
-from difflib import Differ
+from difflib import Differ, unified_diff
 
 
 class Controller:
@@ -13,10 +14,6 @@ class Controller:
                                           filetypes=[("Cpp files", "*.cpp")])
         # get working path
         if path != "":
-            if file_number == 0:
-                self.view.import_first_source_button._bg_color = "green"
-            else:
-                self.view.import_second_source_button._bg_color = "green"
             components = path.split("/")
             file_name = components[len(components) - 1]
             if file_number == 0:
@@ -37,13 +34,29 @@ class Controller:
         self.singleton.reset_reading_position(0)
         self.singleton.reset_reading_position(1)
 
-        for line in differ.compare(self.singleton.get_file(0).readlines(), self.singleton.get_file(1).readlines()):
-            if line.startswith("-"):
-                text += "File 1 has: " + line[2:]
-            elif line.startswith("+"):
-                text += "File 2 has: " + line[2:]
-        if text == "":
-            text = "Files are identical"
+        diff_lines = []
+        file1 = self.singleton.get_file(0).readlines()
+        file2 = self.singleton.get_file(1).readlines()
+
+        difference = (unified_diff(file1, file2, fromfile=self.singleton.get_filepath(0),
+                                   tofile=self.singleton.get_filepath(1), lineterm=''))
+        for line in difference:
+            text += line + "\n"
+        # max_lines = max(len(file1), len(file2))
+        # for line_num in range(max_lines):
+        #     line1 = file1[line_num].strip() if line_num < len(file1) else ""
+        #     line2 = file2[line_num].strip() if line_num < len(file2) else ""
+        #     if line1 != line2:
+        #         diff_lines.append((line_num + 1, line1, line2))
+        #
+        # if len(diff_lines) == 0:
+        #     text = "Files are identical"
+        # else:
+        #     for line_num, line1, line2 in diff_lines:
+        #         text += "Difference at line " + str(line_num) + "\n"
+        #         text += "File 1 has: " + line1 + "\n"
+        #         text += "File 2 has: " + line2 + "\n"
+        #         text += "\n"
 
         self.view.generate_output_frame(text)
 
@@ -51,5 +64,7 @@ class Controller:
         self.singleton.reset_reading_position(1)
 
     def update_code(self, i):
-        self.view.first_file_name.configure(text=self.singleton.get_filename(0))
-        self.view.second_file_name.configure(text=self.singleton.get_filename(1))
+        if self.singleton.get_filename(0) != "":
+            self.view.first_file_name.configure(text=self.singleton.get_filename(0))
+        if self.singleton.get_filename(1) != "":
+            self.view.second_file_name.configure(text=self.singleton.get_filename(1))

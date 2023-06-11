@@ -120,5 +120,6 @@ class View(ctk.CTkFrame):
 
             self.output_preview.delete("0.0", tkinter.END)
             self.output_preview.insert(tkinter.END, text)
+            self.output_preview.configure(state="disabled")
         else:
             self.toplevel_window.focus()
