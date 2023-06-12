@@ -17,7 +17,8 @@ class EfficiencyChecker:
 
     def check_leaks(self):
         self.cpp_object.check_leaks()
-        return self.cpp_object.get_leaks_logs()
+        leaks = self.cpp_object.get_leaks_logs()
+        return leaks if leaks != "" else "None"
 
     def check_logs(self):
         if self.cpp_object.get_compilation_logs() == "":

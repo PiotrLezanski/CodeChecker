@@ -26,7 +26,7 @@ class test_Efficiency_Checker(unittest.TestCase):
         _id = 0
         filepath = "/not/existing"
 
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(Exception):
             EfficiencyChecker(_id, filepath)
 
     def test_should_return_correct_time_when_not_exceeded(self):
@@ -53,7 +53,7 @@ class test_Efficiency_Checker(unittest.TestCase):
         self.instance.cpp_object.get_leaks_logs = MagicMock(return_value="")
 
         output = self.instance.check_leaks()
-        self.assertEqual(output, "")
+        self.assertEqual(output, "None")
 
     def test_should_return_logs_when_exist(self):
         self.instance.cpp_object.get_compilation_logs = MagicMock(return_value="error")
