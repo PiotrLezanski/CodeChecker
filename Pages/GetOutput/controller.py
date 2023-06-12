@@ -1,5 +1,5 @@
 
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import customtkinter as ctk
 import tkinter
 import subprocess
@@ -37,6 +37,10 @@ class Controller:
             self.view.infile_preview.insert(tkinter.END, self.input_text) # add content of file
 
     def run_code(self):
+        if self.singleton.get_file() is None:
+            messagebox.showerror("Error message", "No source file attached")
+            return
+
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END) # get input from textbox, if it was changed from file
         factory = CppFactory()
         if self.input_filepath != "":

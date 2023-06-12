@@ -1,5 +1,5 @@
 import tkinter
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from Tools.FileSingleton import FileSingleton
@@ -38,7 +38,7 @@ class Controller:
     def run(self):
         # no default file uploaded
         if self.__instance.get_file() is None:
-            Tools.PopUpWindow.generate_popup_window("No source file attached", self.view)
+            messagebox.showerror("Error message", "No source file attached")
             return
 
         if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[2].get() == 0:

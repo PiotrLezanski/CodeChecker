@@ -70,13 +70,13 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
 
-    @patch("Tools.PopUpWindow.generate_popup_window", new_callable=MagicMock)
+    @patch("tkinter.messagebox.showerror", new_callable=MagicMock)
     def test_run_without_source_file_do_nothing(self, mock_popup):
         self.mock_singleton._FileSingleton__instance.get_file.return_value = None
 
         self.test_controller.run()
 
-        mock_popup.assert_called_once_with("No source file attached", self.mock_view)
+        mock_popup.assert_called_once_with("Error message", "No source file attached")
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
 

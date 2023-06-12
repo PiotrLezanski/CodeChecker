@@ -50,28 +50,32 @@ class Test_Code_Difference_Controller(unittest.TestCase):
         self.mock_view.first_file_name.configure.assert_not_called()
         self.mock_view.second_file_name.configure.assert_not_called()
 
-    def test_should_do_not_run_when_both_files_none(self):
+    @patch('tkinter.messagebox.showerror', new_callable=MagicMock)
+    def test_should_do_not_run_when_both_files_none(self, mock_showerror):
         self.mock_singleton.get_file.return_value = None
 
         self.test_controller.run()
 
         self.test_controller.view.generate_output_frame.assert_not_called()
 
-    def test_should_do_not_run_when_only_first_file_none(self):
+    @patch('tkinter.messagebox.showerror', new_callable=MagicMock)
+    def test_should_do_not_run_when_only_first_file_none(self, mock_showerror):
         self.mock_singleton.get_file.side_effect = [None, 1]
 
         self.test_controller.run()
 
         self.test_controller.view.generate_output_frame.assert_not_called()
 
-    def test_should_do_not_run_when_only_second_file_none(self):
+    @patch('tkinter.messagebox.showerror', new_callable=MagicMock)
+    def test_should_do_not_run_when_only_second_file_none(self, mock_showerror):
         self.mock_singleton.get_file.side_effect = [1, None]
 
         self.test_controller.run()
 
         self.test_controller.view.generate_output_frame.assert_not_called()
 
-    def test_should_run_when_both_files_not_none(self):
+    @patch('tkinter.messagebox.showerror', new_callable=MagicMock)
+    def test_should_run_when_both_files_not_none(self, mock_showerror):
         mock_file = MagicMock()
         mock_file.readlines.side_effect = ["first", "second"]
         self.mock_singleton.get_file.return_value = mock_file

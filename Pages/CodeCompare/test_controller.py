@@ -102,7 +102,7 @@ class Test_Code_Compare_Controller(unittest.TestCase):
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
 
-    @patch('Tools.PopUpWindow.generate_popup_window', new_callable=MagicMock)
+    @patch('tkinter.messagebox.showerror', new_callable=MagicMock)
     @patch('builtins.open', new_callable=MagicMock)
     @patch('Tools.EfficiencyChecker.EfficiencyChecker', new_callable=MagicMock)
     def test_run_when_file_not_loaded_does_nothing(self,mock_efficiency_checker, mock_open, mock_popup):
@@ -110,7 +110,7 @@ class Test_Code_Compare_Controller(unittest.TestCase):
 
         self.controller.run()
 
-        mock_popup.assert_called_once_with("Attach both source files", self.mock_view)
+        mock_popup.assert_called_once_with("Error message", "Attach both source files")
         self.mock_view.generate_output_frane.assert_not_called()
 
     @patch('builtins.open', new_callable=MagicMock)
@@ -135,7 +135,7 @@ class Test_Code_Compare_Controller(unittest.TestCase):
 
         self.mock_view.generate_output_frame.assert_called_once()
 
-    @patch('Tools.PopUpWindow.generate_popup_window', new_callable=MagicMock)
+    @patch('tkinter.messagebox.showerror', new_callable=MagicMock)
     @patch('builtins.open', new_callable=MagicMock)
     @patch('Tools.EfficiencyChecker.EfficiencyChecker', new_callable=MagicMock)
     def test_run_when_nothing_checked_open_popup(self, mock_efficiency_checker, mock_open, mock_popup):
@@ -147,7 +147,7 @@ class Test_Code_Compare_Controller(unittest.TestCase):
 
         self.controller.run()
 
-        mock_popup.assert_called_once_with("Choose at least one option", self.mock_view)
+        mock_popup.assert_called_once_with("Error message", "Choose at least one option")
         self.mock_view.generate_output_frame.assert_not_called()
 
     @patch('builtins.open', new_callable=MagicMock)

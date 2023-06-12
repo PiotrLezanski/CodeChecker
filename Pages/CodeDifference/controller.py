@@ -1,5 +1,5 @@
 import sys
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from Tools.FileSingleton import FileSingleton
 from difflib import Differ, unified_diff
 from Tools.PopUpWindow import generate_popup_window
@@ -26,7 +26,8 @@ class Controller:
 
     def run(self):
         if self.singleton.get_file(0) is None or self.singleton.get_file(1) is None:
-            generate_popup_window("No files attached", self.view)
+            messagebox.showerror("Error message", "No files attached")
+            # generate_popup_window("No files attached", self.view)
             return
 
         differ = Differ()
