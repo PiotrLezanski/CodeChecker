@@ -4,6 +4,7 @@ import os
 from typing import Optional, IO
 from Tools.FileSingleton import FileSingleton
 
+
 class CppObject:
     def __init__(self, id: int, input_filepath: str, input_text: str, exec_time):
         self.compilation_logs = ""
@@ -18,14 +19,22 @@ class CppObject:
 
     def compile_and_run(self):
         self.compilation_logs = self.compile()
+
         if self.compilation_logs == "":
             # run with given input and test execution time
-            start = datetime.datetime.now()  # start timer
-            res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input, check=True)
-            end = datetime.datetime.now()  # end timer
-            os.remove("a.out")
-            self.output = res.stdout
-            self.execution_time = int((end - start).total_seconds() * 1000)
+            try:
+                start = datetime.datetime.now()  # start timer
+                res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input, check=True,
+                                     timeout=self.max_execution_time / 1000)
+                end = datetime.datetime.now()  # end timer
+                os.remove("a.out")
+                self.output = res.stdout
+                self.execution_time = int((end - start).total_seconds() * 1000)
+            except subprocess.TimeoutExpired:
+                self.compilation_logs = "Time limit exceeded"
+            except subprocess.SubprocessError:
+                self.compilation_logs = "Runtime error"
+                self.output = ""
 
     def compile(self):
         res = subprocess.run(['g++', self.code_filepath], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -33,9 +42,10 @@ class CppObject:
 
     def save_output_to_file(self):
         if self.output is not None:
-            output_file_name = self.input_filepath[self.input_filepath.rfind('/') + 1:self.input_filepath.rfind('.')] + ".out"
+            output_file_name = self.input_filepath[
+                               self.input_filepath.rfind('/') + 1:self.input_filepath.rfind('.')] + ".out"
             try:
-                output_filepath = self.code_filepath[0:self.code_filepath.rfind('/')+1:]+ str(output_file_name)
+                output_filepath = self.code_filepath[0:self.code_filepath.rfind('/') + 1:] + str(output_file_name)
                 output_file = open(output_filepath, 'w+')
                 output_file.write(self.output)
                 output_file.close()
@@ -49,7 +59,8 @@ class CppObject:
             return True
 
     def check_leaks(self):
-        self.compilation_logs = self.compile()
+        if self.compilation_logs != "Runtime error":
+            self.compilation_logs = self.compile()
         # check for leaks only, if compilation was successful
         if self.compilation_logs == "":
             self.leaks_logs = self.run_leaks_test()

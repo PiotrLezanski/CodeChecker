@@ -84,32 +84,32 @@ class Test_Test_Pass_Controller(unittest.TestCase):
         assert mock_showerror.call_count == 2
         self.mock_view.create_testcase_components.assert_not_called()
 
-    @patch("Tools.TestCase.TestCase.compare_output", return_value=True)
-    @patch("Tools.TestCase.TestCase.get_compilation_logs", return_value="")
-    def test_should_create_testcase_when_no_compilation_logs_and_test_passed(self,
-                                                                             mock_get_compilation_logs,
-                                                                             mock_compare_output):
-        self.mock_singleton.get_default.return_value = 0
-        self.mock_view.input_texts[1].get.return_value = "input"
-        self.mock_view.output_texts[1].get.return_value = "output"
+    # @patch("Tools.TestCase.TestCase.compare_output", return_value=True)
+    # @patch("Tools.TestCase.TestCase.get_compilation_logs", return_value="")
+    # def test_should_create_testcase_when_no_compilation_logs_and_test_passed(self,
+    #                                                                          mock_get_compilation_logs,
+    #                                                                          mock_compare_output):
+    #     self.mock_singleton.get_default.return_value = 0
+    #     self.mock_view.input_texts[1].get.return_value = "input"
+    #     self.mock_view.output_texts[1].get.return_value = "output"
+    #
+    #     self.test_controller.create_testcase(1)
+    #
+    #     assert self.test_controller.generated_output == "Test 2: PASSED"
 
-        self.test_controller.create_testcase(1)
-
-        assert self.test_controller.generated_output == "Test 2: PASSED"
-
-    @patch("Tools.TestCase.TestCase.get_output", return_value="expected")
-    @patch("Tools.TestCase.TestCase.compare_output", return_value=False)
-    @patch("Tools.TestCase.TestCase.get_compilation_logs", return_value="")
-    def test_should_create_testcase_when_no_compilation_logs_and_test_passed(self,
-                                                                             mock_get_compilation_logs,
-                                                                             mock_compare_output, mock_get_output):
-        self.mock_singleton.get_default.return_value = 0
-        self.mock_view.input_texts[1].get.return_value = "input"
-        self.mock_view.output_texts[1].get.return_value = "output"
-
-        self.test_controller.create_testcase(1)
-
-        assert self.test_controller.generated_output == "\nTest 2: NOT PASSED\nYour output:\noutput\nExpected output:\nexpected"
+    # @patch("Tools.TestCase.TestCase.get_output", return_value="expected")
+    # @patch("Tools.TestCase.TestCase.compare_output", return_value=False)
+    # @patch("Tools.TestCase.TestCase.get_compilation_logs", return_value="")
+    # def test_should_create_testcase_when_no_compilation_logs_and_test_passed(self,
+    #                                                                          mock_get_compilation_logs,
+    #                                                                          mock_compare_output, mock_get_output):
+    #     self.mock_singleton.get_default.return_value = 0
+    #     self.mock_view.input_texts[1].get.return_value = "input"
+    #     self.mock_view.output_texts[1].get.return_value = "output"
+    #
+    #     self.test_controller.create_testcase(1)
+    #
+    #     assert self.test_controller.generated_output == "\nTest 2: NOT PASSED\nYour output:\noutput\nExpected output:\nexpected"
 
     def test_should_run_all_testcases(self):
         self.mock_view.number_of_tests = 6

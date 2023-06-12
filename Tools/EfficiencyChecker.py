@@ -16,8 +16,11 @@ class EfficiencyChecker:
             return "Time limit exceeded"
 
     def check_leaks(self):
-        self.cpp_object.check_leaks()
-        return self.cpp_object.get_leaks_logs()
+        if self.cpp_object.get_compilation_logs() == "":
+            self.cpp_object.check_leaks()
+            leaks = self.cpp_object.get_leaks_logs()
+            return leaks if leaks != "" else "None"
+        return "Compilation error"
 
     def check_logs(self):
         if self.cpp_object.get_compilation_logs() == "":

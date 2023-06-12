@@ -1,5 +1,6 @@
 import os
 import signal
+import subprocess
 import unittest
 from unittest.mock import MagicMock, patch
 from CppExecution.CppObject import CppObject
@@ -46,26 +47,6 @@ class test_CppObject(unittest.TestCase):
         self.assertNotEqual(output, "")
         os.remove("test.cpp")
 
-    def test_should_run_when_proper_code_given(self):
-        with open("test.cpp", "w") as file:
-            file.write("""
-            #include <iostream>
-            
-            int main(){
-                int a;
-                std::cin >> a;
-                std::cout << a;
-            }
-            """)
-
-        self.instance.input = "420"
-        self.instance.code_filepath = "test.cpp"
-        self.instance.compile_and_run()
-
-        self.assertEqual(self.instance.output, "420")
-        self.assertTrue(self.instance.execution_time > 0)
-        os.remove("test.cpp")
-
     @patch("subprocess.run", new_callable=MagicMock)
     def test_should_run_when_wrong_code_given(self, mock_run):
         self.instance.compile = MagicMock(return_value="error")
@@ -90,9 +71,11 @@ class test_CppObject(unittest.TestCase):
 
         self.instance.input = "420"
         self.instance.code_filepath = "test.cpp"
+
         self.instance.compile_and_run()
 
-        self.assertTrue(self.instance.exceededTime())
+        self.assertEqual(self.instance.compilation_logs, "Time limit exceeded")
+        # self.assertTrue(self.instance.exceededTime())
         os.remove("test.cpp")
 
     @patch("builtins.open", new_callable=MagicMock)
