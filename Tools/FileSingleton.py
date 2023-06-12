@@ -43,7 +43,9 @@ class FileSingleton(object):
         if i is None:
             i = self.__default
         if self.__file[i] is not None:
-            return self.__file[i].read()
+            file_text = self.__file[i].read()
+            self.reset_reading_position(i)
+            return file_text
         else:
             return ""
 
