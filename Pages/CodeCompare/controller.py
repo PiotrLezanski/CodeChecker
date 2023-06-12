@@ -51,12 +51,12 @@ class Controller:
 
     def run(self):
         if self.singleton.get_file(0) is None or self.singleton.get_file(1) is None:
-            generate_popup_window("No files attached", self.view)
+            Tools.PopUpWindow.generate_popup_window("Attach both source files", self.view)
             return
 
         if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[
             2].get() == 0:
-            generate_popup_window("Choose at least 1 checkbox", self.view)
+            Tools.PopUpWindow.generate_popup_window("Choose at least one option", self.view)
             return
 
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END)

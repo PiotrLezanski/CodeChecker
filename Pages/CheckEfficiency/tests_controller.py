@@ -70,11 +70,13 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
 
-    def test_run_without_source_file_do_nothing(self):
+    @patch("Tools.PopUpWindow.generate_popup_window", new_callable=MagicMock)
+    def test_run_without_source_file_do_nothing(self, mock_popup):
         self.mock_singleton._FileSingleton__instance.get_file.return_value = None
 
         self.test_controller.run()
 
+        mock_popup.assert_called_once_with("No source file attached", self.mock_view)
         self.mock_view.infile_preview.delete.assert_not_called()
         self.mock_view.infile_preview.insert.assert_not_called()
 
@@ -89,19 +91,17 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
 
         self.mock_view.generate_output_frame.assert_called_once_with("Logs: logs\n\n")
 
-    @patch("Tools.EfficiencyChecker.EfficiencyChecker", new_callable=MagicMock)
-    def test_run_when_compilation_successful_check_nothing(self, mock_efficiency_checker):
+    @patch("Tools.PopUpWindow.generate_popup_window", new_callable=MagicMock)
+    def test_run_when_compilation_successful_check_nothing(self, mock_popup):
         self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
-        self.mock_singleton._FileSingleton__instance.get_default.return_value = "0"
-        self.test_controller.input_text = "text"
-        mock_efficiency_checker.return_value.check_logs.return_value = "Compilation successful"
         self.mock_view.checkbox_vars[0].get.return_value = 0 #time
         self.mock_view.checkbox_vars[1].get.return_value = 0 #leaks
         self.mock_view.checkbox_vars[2].get.return_value = 0 #logs
 
         self.test_controller.run()
 
-        self.mock_view.generate_output_frame.assert_called_once_with("Logs: Not checked\n\nTime: Not checked\n\nLeaks: Not checked\n\n")
+        mock_popup.assert_called_once_with("Choose at least 1 checkbox", self.mock_view)
+        self.mock_view.generate_output_frame.assert_not_called()
 
     @patch("Tools.EfficiencyChecker.EfficiencyChecker", new_callable=MagicMock)
     def test_run_when_compilation_successful_check_time(self, mock_efficiency_checker):
