@@ -3,7 +3,7 @@ from tkinter import filedialog, messagebox
 import customtkinter as ctk
 
 from Tools.FileSingleton import FileSingleton
-from Tools.PopUpWindow import generate_popup_window
+
 from Tools.EfficiencyChecker import EfficiencyChecker
 import Tools
 
@@ -41,7 +41,8 @@ class Controller:
             messagebox.showerror("Error message", "No source file attached")
             return
 
-        if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[2].get() == 0:
+        if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[
+            2].get() == 0:
             Tools.PopUpWindow.generate_popup_window("Choose at least 1 checkbox", self.view)
             return
 

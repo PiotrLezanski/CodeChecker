@@ -2,7 +2,7 @@ import sys
 from tkinter import filedialog, messagebox
 from Tools.FileSingleton import FileSingleton
 from difflib import Differ, unified_diff
-from Tools.PopUpWindow import generate_popup_window
+
 
 
 class Controller:

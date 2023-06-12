@@ -2,7 +2,7 @@ import tkinter
 from tkinter import filedialog, messagebox
 
 from Tools.FileSingleton import FileSingleton
-from Tools.PopUpWindow import generate_popup_window
+
 from Tools.EfficiencyChecker import EfficiencyChecker
 
 import Tools
