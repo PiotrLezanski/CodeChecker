@@ -21,11 +21,14 @@ class CppObject:
         if self.compilation_logs == "":
             # run with given input and test execution time
             start = datetime.datetime.now()  # start timer
-            res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input, check=True)
-            end = datetime.datetime.now()  # end timer
-            os.remove("a.out")
-            self.output = res.stdout
-            self.execution_time = int((end - start).total_seconds() * 1000)
+            try:
+                res = subprocess.run(['./a.out'], capture_output=True, text=True, input=self.input, check=True, timeout=self.max_execution_time/1000)
+                end = datetime.datetime.now()  # end timer
+                os.remove("a.out")
+                self.output = res.stdout
+                self.execution_time = int((end - start).total_seconds() * 1000)
+            except subprocess.TimeoutExpired:
+                self.compilation_logs = "Time limit exceeded"
 
     def compile(self):
         res = subprocess.run(['g++', self.code_filepath], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

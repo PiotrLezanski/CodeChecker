@@ -1,5 +1,6 @@
 import os
 import signal
+import subprocess
 import unittest
 from unittest.mock import MagicMock, patch
 from CppExecution.CppObject import CppObject
@@ -90,9 +91,11 @@ class test_CppObject(unittest.TestCase):
 
         self.instance.input = "420"
         self.instance.code_filepath = "test.cpp"
+
         self.instance.compile_and_run()
 
-        self.assertTrue(self.instance.exceededTime())
+        self.assertEqual(self.instance.compilation_logs, "Time limit exceeded")
+        # self.assertTrue(self.instance.exceededTime())
         os.remove("test.cpp")
 
     @patch("builtins.open", new_callable=MagicMock)
