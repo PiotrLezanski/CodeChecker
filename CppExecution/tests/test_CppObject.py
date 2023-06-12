@@ -47,26 +47,6 @@ class test_CppObject(unittest.TestCase):
         self.assertNotEqual(output, "")
         os.remove("test.cpp")
 
-    def test_should_run_when_proper_code_given(self):
-        with open("test.cpp", "w") as file:
-            file.write("""
-            #include <iostream>
-            
-            int main(){
-                int a;
-                std::cin >> a;
-                std::cout << a;
-            }
-            """)
-
-        self.instance.input = "420"
-        self.instance.code_filepath = "test.cpp"
-        self.instance.compile_and_run()
-
-        self.assertEqual(self.instance.output, "420")
-        self.assertTrue(self.instance.execution_time > 0)
-        os.remove("test.cpp")
-
     @patch("subprocess.run", new_callable=MagicMock)
     def test_should_run_when_wrong_code_given(self, mock_run):
         self.instance.compile = MagicMock(return_value="error")

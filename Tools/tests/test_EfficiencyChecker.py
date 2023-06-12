@@ -45,12 +45,14 @@ class test_Efficiency_Checker(unittest.TestCase):
     def test_should_return_leaks_when_exist(self):
         self.instance.cpp_object.check_leaks = MagicMock()
         self.instance.cpp_object.get_leaks_logs = MagicMock(return_value="i'm a leak")
+        self.instance.cpp_object.compilation_logs = ""
 
         output = self.instance.check_leaks()
         self.assertEqual(output, "i'm a leak")
 
     def test_should_return_leaks_when_not_exist(self):
         self.instance.cpp_object.get_leaks_logs = MagicMock(return_value="")
+        self.instance.cpp_object.compilation_logs = ""
 
         output = self.instance.check_leaks()
         self.assertEqual(output, "None")
