@@ -91,7 +91,7 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
 
         self.mock_view.generate_output_frame.assert_called_once_with("Logs: logs\n\n")
 
-    @patch("Tools.PopUpWindow.generate_popup_window", new_callable=MagicMock)
+    @patch("tkinter.messagebox.showerror", new_callable=MagicMock)
     def test_run_when_compilation_successful_check_nothing(self, mock_popup):
         self.mock_singleton._FileSingleton__instance.get_file.return_value = "test.cpp"
         self.mock_view.checkbox_vars[0].get.return_value = 0 #time
@@ -100,7 +100,7 @@ class Test_Check_Efficiency_Controller(unittest.TestCase):
 
         self.test_controller.run()
 
-        mock_popup.assert_called_once_with("Choose at least 1 checkbox", self.mock_view)
+        mock_popup.assert_called_once_with("Error message", "Choose at least 1 checkbox")
         self.mock_view.generate_output_frame.assert_not_called()
 
     @patch("Tools.EfficiencyChecker.EfficiencyChecker", new_callable=MagicMock)

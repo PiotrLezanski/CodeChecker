@@ -43,7 +43,7 @@ class Controller:
 
         if self.view.checkbox_vars[0].get() == 0 and self.view.checkbox_vars[1].get() == 0 and self.view.checkbox_vars[
             2].get() == 0:
-            Tools.PopUpWindow.generate_popup_window("Choose at least 1 checkbox", self.view)
+            messagebox.showerror("Error message", "Choose at least 1 checkbox")
             return
 
         self.input_text = self.view.infile_preview.get("1.0", tkinter.END)
